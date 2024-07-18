@@ -3,10 +3,11 @@
 
 # Tools and Technologies Used
 - React
+- React Testing Library
+- ChartJS
 - Vite
 - GraphQL
 - AWS Lambda
 - TypeScript
 - Jest
-
-hello
+- Styled Components
