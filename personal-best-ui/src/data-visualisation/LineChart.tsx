@@ -1,17 +1,39 @@
-import { useState } from 'react'
-import './App.css'
 
-function App() {
+import { Line } from "react-chartjs-2";
+import Chart, {CategoryScale } from 'chart.js/auto';
 
+const personalBestsByMonth = [
+  { month: 'Jan', personalBest: 10 },
+  { month: 'Feb', personalBest: 20 },
+  { month: 'Mar', personalBest: 15 },
+  { month: 'Apr', personalBest: 25 },
+  { month: 'May', personalBest: 27 },
+  { month: 'Jun', personalBest: 30 },
+  { month: 'Jul', personalBest: 28 },
+];
+
+const dataset = {
+  labels: personalBestsByMonth.map(row => row.month),
+  datasets: [
+    {
+      label: "This month's PB",
+      backgroundColor: "rgb(255, 99, 132)",
+      borderColor: "rgb(255, 99, 132)",
+      data: personalBestsByMonth.map(row => row.personalBest),
+    },
+  ],
+};
+
+Chart.register(
+  CategoryScale,
+);
+
+const LineChart = () => {
   return (
-    <>
-      <h1>Line Chart</h1>
-      <div className="card">
-        <canvas id="line-chart"></canvas>
-      </div>
-        
-    </>
-  )
-}
+    <div>
+      <Line data={dataset} />
+    </div>
+  );
+};
 
-export default App
+export default LineChart;
