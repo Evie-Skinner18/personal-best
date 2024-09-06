@@ -11,3 +11,5 @@
 - TypeScript
 - Jest
 - Styled Components
+
+- 🍫
