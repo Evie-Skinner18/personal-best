@@ -2,7 +2,7 @@ export interface Exercise {
     id: string,
 	name: string,
     latestAttempt: LatestAttempt,
-	personalBest: PersonalBest,
+	currentPersonalBestId: string,
     modality: TrainingModality,
     dateLastTrained: string
 }
@@ -14,6 +14,8 @@ export interface LatestAttempt {
 }
 
 export interface PersonalBest {
+    id: string,
+    exerciseId: string,
     measurementUnit: MeasurementUnit,
     number: number,
     weight: number | undefined
@@ -32,4 +34,9 @@ export enum TrainingModality {
     Weights,
     Movement,
     Running
+}
+
+export interface PersonalBestByMonth {
+    month: string,
+    personalBest: number
 }

@@ -1,8 +1,9 @@
 
 import { Line } from "react-chartjs-2";
 import Chart, {CategoryScale } from 'chart.js/auto';
+import { PersonalBestByMonth } from "../exercise/Exercise";
 
-const personalBestsByMonth = [
+const personalBestsByMonth: PersonalBestByMonth[] = [
   { month: 'Jan', personalBest: 10 },
   { month: 'Feb', personalBest: 20 },
   { month: 'Mar', personalBest: 15 },
