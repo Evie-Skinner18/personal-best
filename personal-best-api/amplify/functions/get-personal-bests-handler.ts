@@ -1,6 +1,10 @@
-import type { Handler } from 'aws-lambda';
+import type { Schema } from "../data/resource"
 
-export const getPersonalBestsHandler: Handler = async (event, context) => {
-  // your function code goes here
-  return 'Keep going!';
-};
+type GetPersonalBestsArgs = {
+    name: string;
+}
+
+export const handler: Schema["getPersonalBests"]["functionHandler"] = async (event) => {
+  const { name } = event.arguments;
+  return `You can do it ${name}!`
+}

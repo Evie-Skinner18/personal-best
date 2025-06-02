@@ -11,6 +11,32 @@ const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
+      isDone: a.boolean().default(false),
+    })
+    .authorization((allow) => [allow.guest()]),
+  
+    PersonalBest: a
+    .model({
+      exerciseId: a.string(),
+      measurementUnit: a.enum(['minutes', 'reps']),
+      number: a.integer().default(0),
+      weight: a.integer().default(0),
+      amountAboveLastPersonalBest: a.integer().default(0),
+    })
+    .authorization((allow) => [allow.guest()]),
+
+  Exercise: a
+    .model({  
+      name: a.string(),
+      attempt: a.customType([{
+        date: a.datetime(),
+        measurementUnit: a.enum(['minutes', 'reps']),
+        number: a.integer().default(0),
+        weight: a.integer().default(0),
+      }]),
+      currentPersonalBestId: a.string(),
+      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+      dateLastTrained: a.string(),
     })
     .authorization((allow) => [allow.guest()]),
       
@@ -22,7 +48,6 @@ const schema = a.schema({
     .returns(a.string())
     .authorization(allow => [allow.guest()])
     .handler(a.handler.function(getPersonalBests)),
-    // to-do Now you can use this query from the Schema export to strongly type your Function handler:
 });
 
 export type Schema = ClientSchema<typeof schema>;

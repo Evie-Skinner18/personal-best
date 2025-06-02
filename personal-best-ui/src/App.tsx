@@ -14,7 +14,7 @@ function App() {
       <p className="read-the-docs">
         You're doing really well ❤️
       </p>
-      <LineChart></LineChart>
+      <LineChart exerciseName={'Kettlebell swing'} lineColour={'rgb(255, 99, 132)'} borderColour={'rgb(255, 99, 132)'}></LineChart>
     </>
   )
 }

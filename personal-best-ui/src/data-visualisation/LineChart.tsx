@@ -1,7 +1,7 @@
 
 import { Line } from "react-chartjs-2";
 import Chart, {CategoryScale } from 'chart.js/auto';
-import { PersonalBestByMonth } from "../exercise/Exercise";
+import { PersonalBestByMonth } from "../domain/personal-best/PersonalBest";
 
 const personalBestsByMonth: PersonalBestByMonth[] = [
   { month: 'Jan', personalBest: 10 },
@@ -14,26 +14,34 @@ const personalBestsByMonth: PersonalBestByMonth[] = [
 ];
 
 // to-do pass in exercise name
-const dataset = {
+const getDataset = (exerciseName: string, lineColour: string, borderColour: string) => {
+  return {
   labels: personalBestsByMonth.map(row => row.month),
   datasets: [
     {
-      label: "This month's PB",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
+      label: `This month's PB for ${exerciseName}`,
+      backgroundColor: lineColour,
+      borderColor: borderColour,
       data: personalBestsByMonth.map(row => row.personalBest),
     },
   ],
-};
+}};
+
+interface LineChartProps {
+  exerciseName: string;
+  lineColour: string;
+  borderColour: string;
+}
 
 Chart.register(
   CategoryScale,
 );
 
-const LineChart = () => {
+const LineChart = (props: LineChartProps) => {
+  const { exerciseName, lineColour, borderColour } = props;
   return (
     <div>
-      <Line data={dataset} />
+      <Line data={getDataset(exerciseName, lineColour, borderColour)} />
     </div>
   );
 };
