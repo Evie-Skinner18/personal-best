@@ -7,6 +7,13 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
 and "delete" any "Todo" records.
 =========================================================================*/
+
+    const attempt = a.customType({
+  date: a.datetime(),
+  measurementUnit: a.enum(['minutes', 'reps']),
+  number: a.integer().default(0),
+  weight: a.integer().default(0),
+});
 const schema = a.schema({
   Todo: a
     .model({
@@ -25,16 +32,12 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.guest()]),
 
+
   Exercise: a
     .model({  
       name: a.string(),
       // to-do how do I make an array of custom type
-      attempts: a.customType([{
-        date: a.datetime(),
-        measurementUnit: a.enum(['minutes', 'reps']),
-        number: a.integer().default(0),
-        weight: a.integer().default(0),
-      }]),
+      // attempts: a.array(attempt).default([]),
       currentPersonalBestId: a.string(),
       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
       dateLastTrained: a.string(),
