@@ -13,6 +13,7 @@ const personalBestsByMonth: PersonalBestByMonth[] = [
   { month: 'Jul', personalBest: 28 },
 ];
 
+// to-do pass in exercise name
 const dataset = {
   labels: personalBestsByMonth.map(row => row.month),
   datasets: [
