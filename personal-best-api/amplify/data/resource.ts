@@ -28,7 +28,8 @@ const schema = a.schema({
   Exercise: a
     .model({  
       name: a.string(),
-      attempt: a.customType([{
+      // to-do how do I make an array of custom type
+      attempts: a.customType([{
         date: a.datetime(),
         measurementUnit: a.enum(['minutes', 'reps']),
         number: a.integer().default(0),

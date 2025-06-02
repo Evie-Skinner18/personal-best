@@ -1,7 +1,17 @@
 import './App.css'
 import LineChart from './data-visualisation/LineChart'
+import client from './main'
 
 function App() {
+  let message;
+
+  client.queries.getPersonalBests({
+    name: "Evie",
+  }).then((response) => {
+    message  = response;
+  }).catch((error) => {
+    console.error("Error fetching personal bests:", error);
+  });
 
   return (
     <>
@@ -14,7 +24,10 @@ function App() {
       <p className="read-the-docs">
         You're doing really well ❤️
       </p>
-      <LineChart exerciseName={'Kettlebell swing'} lineColour={'rgb(255, 99, 132)'} borderColour={'rgb(255, 99, 132)'}></LineChart>
+      <LineChart exerciseName={'Kettlebell swing'} lineColour={'rgb(255, 99, 132)'} borderColour={'rgb(250, 91, 125)'}></LineChart>
+      <div>
+        <h2> { message?? 'coucou' }</h2>
+      </div>
     </>
   )
 }

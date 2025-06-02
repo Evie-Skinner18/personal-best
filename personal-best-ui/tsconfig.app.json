@@ -23,5 +23,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "../personal-best-api/amplify/data/resource.ts", "../personal-best-api/amplify/amplify_outputs.json"],
 }
