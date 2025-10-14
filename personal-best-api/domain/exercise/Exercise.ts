@@ -3,7 +3,6 @@ import { MeasurementUnit } from "../common/MeasurementUnit"
 export interface Exercise {
     id: string,
 	name: string,
-    attempts: Attempt[],
 	currentPersonalBestId: string,
     modality: TrainingModality,
     dateLastTrained: string
@@ -11,6 +10,7 @@ export interface Exercise {
 
 export interface Attempt {
     id: string,
+    exerciseId: string,
     date: string,
     measurementUnit: MeasurementUnit,
     number: number,

@@ -15,32 +15,22 @@ and "delete" any "Todo" records.
   weight: a.integer().default(0),
 });
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-      isDone: a.boolean().default(false),
-    })
-    .authorization((allow) => [allow.guest()]),
-  
-    PersonalBest: a
-    .model({
-      exerciseId: a.string(),
-      measurementUnit: a.enum(['minutes', 'reps']),
-      number: a.integer().default(0),
-      weight: a.integer().default(0),
-      amountAboveLastPersonalBest: a.integer().default(0),
-    })
-    .authorization((allow) => [allow.guest()]),
-
-
   Exercise: a
     .model({  
       name: a.string(),
-      // to-do how do I make an array of custom type
-      // attempts: a.array(attempt).default([]),
       currentPersonalBestId: a.string(),
       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
       dateLastTrained: a.string(),
+    })
+    .authorization((allow) => [allow.guest()]),
+
+    Attempt: a
+    .model({
+      exerciseId: a.string(),
+      date: a.string(),
+      measurementUnit: a.enum(['minutes', 'reps']),
+      number: a.integer().default(0),
+      weight: a.integer().default(0),
     })
     .authorization((allow) => [allow.guest()]),
       
