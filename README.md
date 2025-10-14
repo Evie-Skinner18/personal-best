@@ -8,6 +8,7 @@
 
 `cd personal-best-api`
 `aws-login-midas`
+Select the sandbox option
 `npx ampx sandbox --profile midas`
 
 # Tools and Technologies Used
