@@ -3,13 +3,14 @@
 ## An app to help me track my taining progress
 
 ## How to run the app
-`cd personal-best-ui`
-`npm run dev`
+1. `cd personal-best-ui`
+2. `npm run dev`
 
-`cd personal-best-api`
-`aws-login-midas`
-Select the sandbox option
-`npx ampx sandbox --profile midas`
+
+1. `cd personal-best-api`
+2. Login to an AWS account using the CLI. For me I use an alias command `aws-login-midas`
+3. Select the sandbox option
+4. `npx ampx sandbox --profile midas`
 
 # Tools and Technologies Used
 - React
@@ -22,4 +23,11 @@ Select the sandbox option
 - Jest
 - Styled Components
 - AWS Amplify
-- Npm
+- NPM
+- Postgres
+
+# AI Usage
+I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before.
+
+## AI Prompts Used
+- Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
