@@ -1,47 +1,95 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { getPersonalBests } from '../functions/get-personal-bests';
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any unauthenticated user can "create", "read", "update", 
-and "delete" any "Todo" records.
+/*== Custom RDS-based API Schema ========================================
+This schema defines the API interface for our PostgreSQL RDS backend.
+The actual data storage is handled via SQL queries in Lambda functions.
 =========================================================================*/
 
-    const attempt = a.customType({
-  date: a.datetime(),
-  measurementUnit: a.enum(['minutes', 'reps']),
-  number: a.integer().default(0),
-  weight: a.integer().default(0),
-});
 const schema = a.schema({
-  Exercise: a
-    .model({  
-      name: a.string(),
-      currentPersonalBestId: a.string(),
-      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
-      dateLastTrained: a.string(),
-    })
-    .authorization((allow) => [allow.guest()]),
+  // Custom types to match our database schema
+  Exercise: a.customType({
+    id: a.string(),
+    name: a.string(),
+    currentPersonalBestId: a.string(),
+    modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+    dateLastTrained: a.datetime(),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  }),
 
-    Attempt: a
-    .model({
-      exerciseId: a.string(),
-      date: a.string(),
-      measurementUnit: a.enum(['minutes', 'reps']),
-      number: a.integer().default(0),
-      weight: a.integer().default(0),
-    })
-    .authorization((allow) => [allow.guest()]),
-      
+  Attempt: a.customType({
+    id: a.string(),
+    exerciseId: a.string(),
+    date: a.datetime(),
+    measurementUnit: a.enum(['minutes', 'reps']),
+    number: a.integer(),
+    weight: a.integer(),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  }),
+
+  PersonalBest: a.customType({
+    attemptId: a.string(),
+    exerciseId: a.string(),
+    exerciseName: a.string(),
+    measurementUnit: a.enum(['minutes', 'reps']),
+    number: a.integer(),
+    weight: a.integer(),
+    date: a.datetime(),
+    amountAboveLastPersonalBest: a.integer(),
+  }),
+
+  // Query operations
   getPersonalBests: a
     .query()
     .arguments({
-      name: a.string(),
+      exerciseName: a.string(),
+      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
     })
-    .returns(a.string())
+    .returns(a.ref('PersonalBest').array())
     .authorization(allow => [allow.guest()])
     .handler(a.handler.function(getPersonalBests)),
+
+  // Additional queries for exercises and attempts
+  getExercises: a
+    .query()
+    .arguments({
+      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+    })
+    .returns(a.ref('Exercise').array())
+    .authorization(allow => [allow.guest()]),
+
+  getAttempts: a
+    .query()
+    .arguments({
+      exerciseId: a.string(),
+      limit: a.integer(),
+    })
+    .returns(a.ref('Attempt').array())
+    .authorization(allow => [allow.guest()]),
+
+  // Mutation operations
+  createExercise: a
+    .mutation()
+    .arguments({
+      name: a.string(),
+      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+    })
+    .returns(a.ref('Exercise'))
+    .authorization(allow => [allow.guest()]),
+
+  createAttempt: a
+    .mutation()
+    .arguments({
+      exerciseId: a.string(),
+      date: a.datetime(),
+      measurementUnit: a.enum(['minutes', 'reps']),
+      number: a.integer(),
+      weight: a.integer(),
+    })
+    .returns(a.ref('Attempt'))
+    .authorization(allow => [allow.guest()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
