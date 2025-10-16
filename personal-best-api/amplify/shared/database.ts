@@ -16,7 +16,7 @@ interface DatabaseCredentials {
 async function getDatabaseCredentials(): Promise<DatabaseCredentials> {
   if (!secretsClient) {
     secretsClient = new SecretsManagerClient({
-      region: process.env.AWS_REGION || 'us-east-1'
+      region: process.env.AWS_REGION || 'eu-west-1'
     });
   }
 

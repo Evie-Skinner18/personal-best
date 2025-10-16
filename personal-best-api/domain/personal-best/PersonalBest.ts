@@ -6,13 +6,14 @@ export interface PersonalBestByMonth {
     personalBest: PersonalBest
 }
 
-// this is like a fusion of exercise and attempt
+// this is an aggregate of exercise and attempt
 export class PersonalBest {
     attemptId: string;
     exerciseId: string;
     measurementUnit: MeasurementUnit;
     number: number;
-    weight: number | undefined;
+    weight?: number;
+    date: Date;
     amountAboveLastPersonalBest: number;
 
 
@@ -22,6 +23,7 @@ export class PersonalBest {
         this.measurementUnit = measurementUnit; 
         this.number = number;
         this.weight = weight;
+        this.date = new Date();
         this.amountAboveLastPersonalBest = amountAboveLastPersonalBest;        
     }
 

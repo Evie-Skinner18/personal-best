@@ -73,6 +73,7 @@ export class RdsConstruct extends Construct {
     );
 
     // Create database credentials
+    // to-do hide in env vars
     this.secret = new Secret(this, 'DatabaseCredentials', {
       secretName: `personal-best-${props.environmentName}-db-credentials`,
       generateSecretString: {
@@ -95,7 +96,7 @@ export class RdsConstruct extends Construct {
     // Create parameter group for PostgreSQL optimization
     const parameterGroup = new ParameterGroup(this, 'DatabaseParameterGroup', {
       engine: DatabaseInstanceEngine.postgres({
-        version: PostgresEngineVersion.VER_15_4,
+        version: PostgresEngineVersion.VER_15_12,
       }),
       parameters: {
         'shared_preload_libraries': 'pg_stat_statements',
@@ -107,7 +108,7 @@ export class RdsConstruct extends Construct {
     // Create RDS instance
     this.instance = new DatabaseInstance(this, 'Database', {
       engine: DatabaseInstanceEngine.postgres({
-        version: PostgresEngineVersion.VER_15_4,
+        version: PostgresEngineVersion.VER_15_12,
       }),
       instanceType: props.environmentName === 'prod' ? 
         InstanceType.of(InstanceClass.T3, InstanceSize.SMALL) : 

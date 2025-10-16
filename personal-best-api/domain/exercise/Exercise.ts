@@ -6,6 +6,8 @@ export interface Exercise {
 	currentPersonalBestId: string,
     modality: TrainingModality,
     dateLastTrained: string
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface Attempt {
@@ -14,7 +16,9 @@ export interface Attempt {
     date: string,
     measurementUnit: MeasurementUnit,
     number: number,
-    weight: number | undefined
+    weight?: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 // help

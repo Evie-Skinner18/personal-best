@@ -34,6 +34,7 @@ model Exercise {
   updatedAt             DateTime         @updatedAt @map("updated_at")
 
   // Relations
+  // to-do do we need the Attempts[] array
   attempts              Attempt[]
   currentPersonalBest   Attempt?         @relation("CurrentPersonalBest", fields: [currentPersonalBestId], references: [id])
 
@@ -53,7 +54,8 @@ model Attempt {
   updatedAt       DateTime        @updatedAt @map("updated_at")
 
   // Relations
-  exercise                    Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exercise                      Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  // to-do not sure what this is doing
   exerciseAsCurrentPersonalBest Exercise[] @relation("CurrentPersonalBest")
 
   @@index([exerciseId])
