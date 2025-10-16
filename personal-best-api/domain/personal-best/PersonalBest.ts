@@ -27,7 +27,7 @@ export class PersonalBest {
         this.amountAboveLastPersonalBest = amountAboveLastPersonalBest;        
     }
 
-    public create(exercise: Exercise, currentPbAttempt: Attempt) {
+    public static create(exercise: Exercise, currentPbAttempt: Attempt) {
         return new PersonalBest(
             currentPbAttempt.id,
             exercise.id,

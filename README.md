@@ -31,3 +31,4 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 
 ## AI Prompts Used
 - Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
+- Can you tell me why I have been able to create a graphQL API using AWS amplify without a graphQL schema in the personal-best-api directory?
