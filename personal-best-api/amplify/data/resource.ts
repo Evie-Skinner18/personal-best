@@ -1,8 +1,9 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { getPersonalBests } from '../functions/get-personal-bests';
 
-/*== Custom RDS-based API Schema ========================================
+/*== Custom RDS-based graphQL API Schema ========================================
 This schema defines the API interface for our PostgreSQL RDS backend.
+this is the graphQL schema
 The actual data storage is handled via SQL queries in Lambda functions.
 =========================================================================*/
 

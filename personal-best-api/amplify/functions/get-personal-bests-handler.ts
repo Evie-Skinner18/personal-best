@@ -1,18 +1,41 @@
-import { Attempt, Exercise, TrainingModality } from "@prisma/client";
 import type { Schema } from "../data/resource"
-import { PersonalBest } from "../../domain/personal-best/PersonalBest";
+import { PersonalBest, PersonalBestDto } from "../../domain/personal-best/PersonalBest";
+import { Attempt, Exercise, TrainingModality } from "../../domain/exercise/Exercise";
+import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
 
-type GetPersonalBestsArgs = {
+type GetPersonalBestsEvent = {
     exerciseName?: string;
     modality?: TrainingModality;
 }
 
 // to-do
-export const handler: Schema["getPersonalBests"]["functionHandler"] = async (event) => {
-  const { exerciseName } = event.arguments;
-  const kettlebellSwing: Exercise={};
-  const latestKbSwingAttempt: Attempt={};
-  return PersonalBest.create();
+export const handler: Schema["getPersonalBests"]["functionHandler"] = async (event): Promise<PersonalBestDto[]> => {
+  // const { exerciseName, modality } = event.arguments;
+  console.log("Evie", JSON.stringify(event));
+  const todaysDate = new Date();
+  const kettlebellSwing: Exercise = {
+    id: "exercise-1",
+    name: "Kettlebell Swing",
+    modality: TrainingModality.Weights,
+    createdAt: todaysDate,
+    updatedAt: todaysDate,
+    currentPersonalBestId: "attempt-3",
+    dateLastTrained: todaysDate.toString(),
+  };
+  const latestKbSwingAttempt: Attempt = {
+    id: "attempt-3",
+    exerciseId: "exercise-1",
+    date: todaysDate.toString(),
+    measurementUnit: MeasurementUnit.Reps,
+    number: 78,
+    createdAt: todaysDate,
+    updatedAt: todaysDate,
+    weight: 12
+  };
+  const pb = PersonalBest.create(kettlebellSwing, latestKbSwingAttempt);
+  return [
+    pb.toSchemaFormat()
+  ]
 }
 
 // Add the required npm packages
