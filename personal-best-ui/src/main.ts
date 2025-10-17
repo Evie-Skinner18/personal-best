@@ -8,8 +8,4 @@ Amplify.configure(outputs)
 
 const client = generateClient<Schema>() 
 
-client.queries.getPersonalBests({
-  name: "Evie",
-})
-
 export default client;

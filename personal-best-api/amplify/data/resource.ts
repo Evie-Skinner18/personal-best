@@ -52,45 +52,45 @@ const schema = a.schema({
     .authorization(allow => [allow.guest()])
     .handler(a.handler.function(getPersonalBests)),
 
-  // Additional queries for exercises and attempts
-  getExercises: a
-    .query()
-    .arguments({
-      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
-    })
-    .returns(a.ref('Exercise').array())
-    .authorization(allow => [allow.guest()]),
+  // to-do add handlers for these
+//   getExercises: a
+//     .query()
+//     .arguments({
+//       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+//     })
+//     .returns(a.ref('Exercise').array())
+//     .authorization(allow => [allow.guest()]),
 
-  getAttempts: a
-    .query()
-    .arguments({
-      exerciseId: a.string(),
-      limit: a.integer(),
-    })
-    .returns(a.ref('Attempt').array())
-    .authorization(allow => [allow.guest()]),
+//   getAttempts: a
+//     .query()
+//     .arguments({
+//       exerciseId: a.string(),
+//       limit: a.integer(),
+//     })
+//     .returns(a.ref('Attempt').array())
+//     .authorization(allow => [allow.guest()]),
 
-  // Mutation operations
-  createExercise: a
-    .mutation()
-    .arguments({
-      name: a.string(),
-      modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
-    })
-    .returns(a.ref('Exercise'))
-    .authorization(allow => [allow.guest()]),
+//   // Mutation operations
+//   createExercise: a
+//     .mutation()
+//     .arguments({
+//       name: a.string(),
+//       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+//     })
+//     .returns(a.ref('Exercise'))
+//     .authorization(allow => [allow.guest()]),
 
-  createAttempt: a
-    .mutation()
-    .arguments({
-      exerciseId: a.string(),
-      date: a.datetime(),
-      measurementUnit: a.enum(['minutes', 'reps']),
-      number: a.integer(),
-      weight: a.integer(),
-    })
-    .returns(a.ref('Attempt'))
-    .authorization(allow => [allow.guest()]),
+//   createAttempt: a
+//     .mutation()
+//     .arguments({
+//       exerciseId: a.string(),
+//       date: a.datetime(),
+//       measurementUnit: a.enum(['minutes', 'reps']),
+//       number: a.integer(),
+//       weight: a.integer(),
+//     })
+//     .returns(a.ref('Attempt'))
+//     .authorization(allow => [allow.guest()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

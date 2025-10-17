@@ -4,9 +4,12 @@ import client from './main'
 
 function App() {
   let message;
+  // to-do consume api response with useState
+  // [const message, setMessage] =  useState<string | null>(null);;
 
   client.queries.getPersonalBests({
-    name: "Evie",
+    exerciseName: "Kettlebell swing",
+    modality: "Weights"
   }).then((response) => {
     message  = response;
   }).catch((error) => {
