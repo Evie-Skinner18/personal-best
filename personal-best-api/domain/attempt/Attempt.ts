@@ -15,7 +15,7 @@ export class Attempt {
     updatedAt: Date;
 
 
-    constructor(id: string, exerciseId: string, 
+    constructor(exerciseId: string, 
         date: string, measurementUnit: string, numberOfReps: number | undefined, timeInMinutes: string | undefined, weightInKg: number,) {
         
         

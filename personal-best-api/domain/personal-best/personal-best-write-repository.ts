@@ -1,9 +1,17 @@
-import { TrainingModality } from "../../domain/exercise/Exercise";
-import { PersonalBest } from "../../domain/personal-best/PersonalBestAggregate";
+import { PersonalBestAggregate } from "./PersonalBestAggregate";
 
-// to-do might not be needed
-export interface PersonalBestWriteRepository {
-      // Personal best operations
-  getPersonalBests(exerciseName?: string, modality?: TrainingModality): Promise<PersonalBest[]>;
-  getPersonalBestForExercise(exerciseId: string): Promise<PersonalBest | null>;
+export interface IPersonalBestWriteRepository {
+  addPersonalBest(personalBest: PersonalBestAggregate): Promise<void>;
+  updatePersonalBest(id: string): Promise<void>;
+}
+
+export class PersonalBestWriteRepository implements IPersonalBestWriteRepository {
+  private personalBestsInMemory: PersonalBestAggregate[] = [];
+
+  addPersonalBest(personalBest: PersonalBestAggregate): Promise<void> {
+    this.personalBestsInMemory.push(personalBest);
+  }
+  updatePersonalBest(id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 }

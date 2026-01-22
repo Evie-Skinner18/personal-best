@@ -24,13 +24,15 @@ const schema = a.schema({
     exerciseId: a.string(),
     date: a.datetime(),
     measurementUnit: a.enum(['minutes', 'reps']),
-    number: a.integer(),
-    weight: a.integer(),
+    timeInMinutes: a.string(),
+    numberOfReps: a.integer(),
+    weightInKg: a.integer(),
     createdAt: a.datetime(),
     updatedAt: a.datetime(),
   }),
 
-  PersonalBest: a.customType({
+  PersonalBestAggregate: a.customType({
+    id: a.string(),
     attemptId: a.string(),
     exerciseId: a.string(),
     exerciseName: a.string(),
