@@ -25,6 +25,7 @@
 - AWS Amplify
 - NPM
 - Postgres
+- Prisma ORM
 
 # AI Usage
 I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before.
@@ -32,3 +33,4 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 ## AI Prompts Used
 - Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
 - Can you tell me why I have been able to create a graphQL API using AWS amplify without a graphQL schema in the personal-best-api directory?
+- hi, please can you make me a repository in this file that connects to the Exercise table of my SQL database defined in the Prisma code? It should be able to only execute read operations

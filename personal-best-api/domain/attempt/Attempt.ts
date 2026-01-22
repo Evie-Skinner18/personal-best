@@ -4,20 +4,28 @@ import { MeasurementUnit } from "../common/MeasurementUnit";
 // maybe an entity
   // should it calculate the increase/decrease since the last attempt?
 export class Attempt {
-    id: string;
+    id!: string;
     exerciseId: string;
-    date: string;
-    measurementUnit: MeasurementUnit;
     numberOfReps?: number;
     timeInMinutes?: string;
     weightInKg: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: number;
+    updatedAt?: number;
 
 
-    constructor(exerciseId: string, 
-        date: string, measurementUnit: string, numberOfReps: number | undefined, timeInMinutes: string | undefined, weightInKg: number,) {
-        
-        
+    constructor(
+        exerciseId: string, 
+        numberOfReps: number | undefined, 
+        timeInMinutes: string | undefined, 
+        weightInKg: number,
+        createdAt: Date
+    ) {
+        const dateInEpochMilliseconds = createdAt.getTime();
+
+        this.exerciseId = exerciseId;
+        this.numberOfReps = numberOfReps;
+        this.timeInMinutes = timeInMinutes;
+        this.weightInKg = weightInKg;
+        this.createdAt = dateInEpochMilliseconds;
     }
 }

@@ -1,20 +1,13 @@
 import { MeasurementUnit } from "../common/MeasurementUnit"
-
+// value object but it has an id because I want to be able to link an attempt to an exercise by id
 export interface Exercise {
     id: string,
 	name: string,
 	currentPersonalBestId?: string,
     modality: TrainingModality,
-    dateLastTrained: string
-    createdAt: Date;
-    updatedAt: Date;
+    measurementUnit: MeasurementUnit;
+    dateLastTrained: number
 }
-
-// help
-// surely it will need to look at all attempts ever recorded to determine the personal best not just the latest one
-// how will this scale
-// just focus on plotting the results on a graph for now
-
 
 export enum TrainingModality {
     Karate,

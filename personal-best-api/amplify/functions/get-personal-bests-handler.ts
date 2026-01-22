@@ -1,6 +1,10 @@
 import type { Schema } from "../data/resource"
 import { PersonalBestAggregate, PersonalBestDto } from "../../domain/personal-best/PersonalBestAggregate";
-import { Attempt, Exercise, TrainingModality } from "../../domain/exercise/Exercise";
+import { Exercise, TrainingModality } from "../../domain/exercise/Exercise";
+import { Attempt } from "../../domain/attempt/Attempt";
+import { IAttemptReadRepository, AttemptReadRepository } from "../../domain/attempt/attempt-read-repository"
+import { container } from "tsyringe";
+import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../domain/personal-best/personal-best-write-repository";
 import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
 
 type GetPersonalBestsEvent = {
@@ -8,10 +12,18 @@ type GetPersonalBestsEvent = {
     modality?: TrainingModality;
 }
 
-// to-do
+// to-do typpe the event properly
 export const handler: Schema["getPersonalBests"]["functionHandler"] = async (event): Promise<PersonalBestDto[]> => {
-  // const { exerciseName, modality } = event.arguments;
-  console.log("Evie", JSON.stringify(event));
+  container.register<IAttemptReadRepository>(AttemptReadRepository,  {useClass: AttemptReadRepository});
+  container.register<IPersonalBestWriteRepository>(PersonalBestWriteRepository,  {useClass: PersonalBestWriteRepository});
+
+  const attemptReadRepository = container.resolve(AttemptReadRepository);
+  const pbWriteRepository = container.resolve(PersonalBestWriteRepository);
+
+  const { exerciseName, modality } = event.arguments;
+  console.log("exercise is ", JSON.stringify(exerciseName));
+  console.log("modality is ", JSON.stringify(modality));
+
   const todaysDate = new Date();
 
   // to-do look these up in the db from a read repository
@@ -19,23 +31,23 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
     id: "exercise-1",
     name: "Kettlebell Swing",
     modality: TrainingModality.Weights,
-    createdAt: todaysDate,
-    updatedAt: todaysDate,
-    currentPersonalBestId: "attempt-3",
-    dateLastTrained: todaysDate.toString(),
-  };
-  
-  const latestKbSwingAttempt: Attempt = {
-    id: "attempt-3",
-    exerciseId: "exercise-1",
-    date: todaysDate.toString(),
     measurementUnit: MeasurementUnit.Reps,
-    number: 78,
-    createdAt: todaysDate,
-    updatedAt: todaysDate,
-    weight: 12
+    currentPersonalBestId: "attempt-3",
+    dateLastTrained: todaysDate.getMilliseconds(),
   };
-  const pb = PersonalBestAggregate.create(kettlebellSwing, latestKbSwingAttempt);
+
+  // WIP
+//   const exerciseReadRepository = new ExerciseReadRepository(await getPrismaClient());
+// const exercise = await repository.getExerciseById('some-id');
+
+  const allKbSwingAttemptsSoFar: Attempt[] = await attemptReadRepository.getAllAttemptsForExerciseId(kettlebellSwing.id);
+
+  const latestKbSwingAttempt = allKbSwingAttemptsSoFar.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    })[0];
+  
+
+  const pb = new PersonalBestAggregate(kettlebellSwing, latestKbSwingAttempt, pbWriteRepository);
   return [
     pb.toSchemaFormat()
   ]

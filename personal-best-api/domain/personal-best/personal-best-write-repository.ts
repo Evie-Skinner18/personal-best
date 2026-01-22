@@ -8,10 +8,11 @@ export interface IPersonalBestWriteRepository {
 export class PersonalBestWriteRepository implements IPersonalBestWriteRepository {
   private personalBestsInMemory: PersonalBestAggregate[] = [];
 
-  addPersonalBest(personalBest: PersonalBestAggregate): Promise<void> {
-    this.personalBestsInMemory.push(personalBest);
+  async addPersonalBest(personalBest: PersonalBestAggregate): Promise<void> {
+    await this.personalBestsInMemory.push(personalBest);
   }
+  // help
   updatePersonalBest(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    const pbToUpdate = this.personalBestsInMemory.find((pb) => pb.id === id)
   }
 }

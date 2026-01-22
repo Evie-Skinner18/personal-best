@@ -1,7 +1,8 @@
 import { MeasurementUnit } from "../common/MeasurementUnit";
 import { Attempt } from "../attempt/Attempt";
 import { Exercise } from "../exercise/Exercise";
-import { injectable } from "tsyringe";
+import { IPersonalBestWriteRepository } from "./personal-best-write-repository";
+import { inject, injectable } from "tsyringe";
 
 export interface PersonalBestByMonth {
     month: string,
@@ -20,10 +21,9 @@ export interface PersonalBestDto {
     amountAboveLastPersonalBest: number;
 }
 
-// this is an aggregate of exercise and attempt
-@injectable
+@injectable()
 export class PersonalBestAggregate {
-    private id: string;
+    private id!: string;
     private attemptId: string;
     private exerciseId: string;
     private exerciseName: string;
@@ -33,37 +33,21 @@ export class PersonalBestAggregate {
     private weightInKg: number;
     private date: Date;
     private amountAboveLastPersonalBest: number;
-    // to-do inject a write repository for persistence
-
-    // private writeRepository: IPersonalBestWriteRepository;
 
 
-    private constructor(
-        attemptId: string, 
-        exerciseId: string, 
-        exerciseName: string, 
-        measurementUnit: MeasurementUnit, 
-        numberOfReps: number | undefined, 
-        timeInMinutes: string | undefined, 
-        weightInKg: number, 
-        amountAboveLastPersonalBest: number) {
-        this.attemptId = attemptId;
-        this.exerciseId = exerciseId;
-        this.exerciseName = exerciseName;
-        this.measurementUnit = measurementUnit; 
-        this.numberOfReps = numberOfReps;
-        this.timeInMinutes = timeInMinutes;
-        this.weightInKg = weightInKg;
-        this.date = new Date();
-        this.amountAboveLastPersonalBest = amountAboveLastPersonalBest;   
-        @inject('IPersonalBestWriteRepository') private IPersonalBestWriteRepository     
-    }
-
-    public static create(exercise: Exercise, currentPbAttempt: Attempt) {
+    // to-do does it need at least 2 attempts: the most recent one and the one immediately previous to compare
+    // help
+    // surely it will need to look at all attempts ever recorded to determine the personal best not just the latest one
+    // how will this scale
+    constructor (
+        exercise: Exercise, 
+        currentPbAttempt: Attempt, 
+        @inject("IPersonalBestWriteRepository") private writeRepository: IPersonalBestWriteRepository     
+) {
         let timeInMinutes: string | undefined;
         let numberOfReps: number | undefined;
 
-        switch (currentPbAttempt.measurementUnit) {
+        switch (exercise.measurementUnit) {
             case MeasurementUnit.Time:
                 if (!currentPbAttempt.timeInMinutes) {
                     const startTimeAtNought = new Date();
@@ -71,27 +55,27 @@ export class PersonalBestAggregate {
                     startTimeAtNought.setMinutes(0);
                     startTimeAtNought.setSeconds(0);
 
-                    time = startTimeAtNought.toTimeString();
+                    timeInMinutes = startTimeAtNought.toTimeString();
                 } else {
-                    time = currentPbAttempt.timeInMinutes;
+                    timeInMinutes = currentPbAttempt.timeInMinutes;
                 }
                 break;
             case MeasurementUnit.Reps:
                 numberOfReps = currentPbAttempt.numberOfReps?? 0;
         }
         // to-do does this need a strategy pattern depending on MEsurementUnit?
-        return new PersonalBestAggregate(
-            
-            currentPbAttempt.id,
-            exercise.id,
-            exercise.name,
-            currentPbAttempt.measurementUnit,
-            numberOfReps,
-            timeInMinutes,
-            currentPbAttempt.weightInKg?? 0,
-            // to-do calculate the increase
-            1,
-        );
+
+        this.attemptId = currentPbAttempt.id,
+        this.exerciseId = exercise.id,
+        this.exerciseName = exercise.name,
+        this.measurementUnit = exercise.measurementUnit,
+        this.numberOfReps = numberOfReps;
+        this.timeInMinutes = timeInMinutes;
+        this.weightInKg = currentPbAttempt.weightInKg;
+        this.date = new Date(currentPbAttempt.createdAt),
+        // to-do calculate this based on no of reps/time
+        this.amountAboveLastPersonalBest = 1
+        
     }
 
     public toSchemaFormat(): PersonalBestDto {
@@ -106,5 +90,13 @@ export class PersonalBestAggregate {
       date: this.date.toISOString(),
       amountAboveLastPersonalBest: this.amountAboveLastPersonalBest
     };
+  }
+
+  public async add(): Promise<void> {
+    await this.writeRepository.addPersonalBest(this);
+  }
+
+  public async update(): Promise<void> {
+    await this.writeRepository.updatePersonalBest(this.id)
   }
 }
