@@ -1,5 +1,5 @@
 import type { Schema } from "../data/resource"
-import { PersonalBest, PersonalBestDto } from "../../domain/personal-best/PersonalBest";
+import { PersonalBestAggregate, PersonalBestDto } from "../../domain/personal-best/PersonalBestAggregate";
 import { Attempt, Exercise, TrainingModality } from "../../domain/exercise/Exercise";
 import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
 
@@ -13,6 +13,8 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
   // const { exerciseName, modality } = event.arguments;
   console.log("Evie", JSON.stringify(event));
   const todaysDate = new Date();
+
+  // to-do look these up in the db from a read repository
   const kettlebellSwing: Exercise = {
     id: "exercise-1",
     name: "Kettlebell Swing",
@@ -22,6 +24,7 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
     currentPersonalBestId: "attempt-3",
     dateLastTrained: todaysDate.toString(),
   };
+  
   const latestKbSwingAttempt: Attempt = {
     id: "attempt-3",
     exerciseId: "exercise-1",
@@ -32,7 +35,7 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
     updatedAt: todaysDate,
     weight: 12
   };
-  const pb = PersonalBest.create(kettlebellSwing, latestKbSwingAttempt);
+  const pb = PersonalBestAggregate.create(kettlebellSwing, latestKbSwingAttempt);
   return [
     pb.toSchemaFormat()
   ]

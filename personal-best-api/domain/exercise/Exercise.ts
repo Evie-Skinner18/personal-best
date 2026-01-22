@@ -10,20 +10,10 @@ export interface Exercise {
     updatedAt: Date;
 }
 
-export interface Attempt {
-    id: string,
-    exerciseId: string,
-    date: string,
-    measurementUnit: MeasurementUnit,
-    number: number,
-    weight?: number;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 // help
 // surely it will need to look at all attempts ever recorded to determine the personal best not just the latest one
 // how will this scale
+// just focus on plotting the results on a graph for now
 
 
 export enum TrainingModality {
