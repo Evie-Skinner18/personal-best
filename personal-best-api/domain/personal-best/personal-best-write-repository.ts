@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { PersonalBestAggregate } from "./PersonalBestAggregate";
 
 export interface IPersonalBestWriteRepository {
@@ -6,10 +7,10 @@ export interface IPersonalBestWriteRepository {
 }
 
 export class PersonalBestWriteRepository implements IPersonalBestWriteRepository {
-  private personalBestsInMemory: PersonalBestAggregate[] = [];
+  constructor(private readonly prisma: PrismaClient) {}
 
   async addPersonalBest(personalBest: PersonalBestAggregate): Promise<void> {
-    await this.personalBestsInMemory.push(personalBest);
+    await this.prisma
   }
   // help
   updatePersonalBest(id: string): Promise<void> {

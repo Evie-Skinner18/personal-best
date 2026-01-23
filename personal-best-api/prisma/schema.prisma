@@ -30,12 +30,9 @@ model Exercise {
   currentPersonalBestId String?          @map("current_personal_best_id") @db.Uuid
   modality              TrainingModality
   dateLastTrained       DateTime?        @map("date_last_trained")
-  createdAt             DateTime         @default(now()) @map("created_at")
-  updatedAt             DateTime         @updatedAt @map("updated_at")
+  measurementUnit       MeasurementUnit @map("measurement_unit")
 
   // Relations
-  // to-do do we need the Attempts[] array
-  attempts              Attempt[]
   currentPersonalBest   Attempt?         @relation("CurrentPersonalBest", fields: [currentPersonalBestId], references: [id])
 
   @@index([modality])
@@ -47,18 +44,33 @@ model Attempt {
   id              String          @id @default(uuid()) @db.Uuid
   exerciseId      String          @map("exercise_id") @db.Uuid
   date            DateTime
-  measurementUnit MeasurementUnit @map("measurement_unit")
-  number          Int             @default(0)
-  weight          Int?
+  numberOfReps    Int?            
+  timeInMinutes   Int?
+  weightInKg      Int             @default(0)
   createdAt       DateTime        @default(now()) @map("created_at")
   updatedAt       DateTime        @updatedAt @map("updated_at")
 
   // Relations
   exercise                      Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
-  // to-do not sure what this is doing
-  exerciseAsCurrentPersonalBest Exercise[] @relation("CurrentPersonalBest")
 
   @@index([exerciseId])
   @@index([date])
   @@map("attempts")
+}
+
+model PersonalBestAggregate {
+    id              String          @id @default(uuid()) @db.Uuid
+    attemptId       String          @map("attempt_id") @db.Uuid
+    exerciseId      String          @map("exercise_id") @db.Uuid
+    exerciseName    String          @map("exercise_name") @db.VarChar(255)
+    measurementUnit MeasurementUnit @map("measurement_unit")
+    numberOfReps    Int? 
+    timeInMinutes   Int?
+    weightInKg      Int             @default(0)
+    date            DateTime
+    amountAboveLastPb Int           @default(0)
+
+    // Relations
+    exercise        Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+    attempt         Attempt         @relation(fields: [attemptId], references: [id], onDelete: Cascade)
 }
