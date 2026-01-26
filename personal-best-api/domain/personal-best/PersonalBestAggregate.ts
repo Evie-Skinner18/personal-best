@@ -1,25 +1,12 @@
 import { MeasurementUnit } from "../common/MeasurementUnit";
+import { PersonalBestDto } from "./personal-best-dto";
 import { Attempt } from "../attempt/Attempt";
 import { Exercise } from "../exercise/Exercise";
 import { IPersonalBestWriteRepository } from "./personal-best-write-repository";
 import { inject, injectable } from "tsyringe";
+import { PrismaPersonalBestWithoutId } from "./prisma-pb-without-id";
+import { PersonalBestAggregate as PrismaPersonalBest } from "../../prisma/generated/client";
 
-export interface PersonalBestByMonth {
-    month: string,
-    personalBest: PersonalBestAggregate
-}
-
-export interface PersonalBestDto {
-    attemptId: string;
-    exerciseId: string;
-    exerciseName: string;
-    measurementUnit: MeasurementUnit;
-    numberOfReps?: number;
-    timeInMinutes?: string;
-    weightInKg: number;
-    date: string;
-    amountAboveLastPersonalBest: number;
-}
 
 @injectable()
 export class PersonalBestAggregate {
@@ -79,24 +66,55 @@ export class PersonalBestAggregate {
     }
 
     public toSchemaFormat(): PersonalBestDto {
-    return {
-      attemptId: this.attemptId,
-      exerciseId: this.exerciseId,
-      exerciseName: this.exerciseName,
-      measurementUnit: this.measurementUnit,
-      numberOfReps: this.numberOfReps,
-      timeInMinutes: this.timeInMinutes,
-      weightInKg: this.weightInKg,
-      date: this.date.toISOString(),
-      amountAboveLastPersonalBest: this.amountAboveLastPersonalBest
-    };
+        return {
+        attemptId: this.attemptId,
+        exerciseId: this.exerciseId,
+        exerciseName: this.exerciseName,
+        measurementUnit: this.measurementUnit,
+        numberOfReps: this.numberOfReps,
+        timeInMinutes: this.timeInMinutes,
+        weightInKg: this.weightInKg,
+        date: this.date.toISOString(),
+        amountAboveLastPersonalBest: this.amountAboveLastPersonalBest
+        };
   }
 
-  public async add(): Promise<void> {
-    await this.writeRepository.addPersonalBest(this);
-  }
+    private mapToCreateDbModel(): PrismaPersonalBestWithoutId {
+        return {
+            exerciseId: this.exerciseId,
+            exerciseName: this.exerciseName,
+            measurementUnit: this.measurementUnit,
+            numberOfReps: this.numberOfReps ?? null,
+            timeInMinutes: parseInt(this.timeInMinutes ?? '0') ?? null,
+            weightInKg: this.weightInKg,
+            date: this.date,
+            amountAboveLastPb: this.amountAboveLastPersonalBest,
+            attemptId: this.attemptId,
+        }
+    }
 
-  public async update(): Promise<void> {
-    await this.writeRepository.updatePersonalBest(this.id)
-  }
+    private mapToUpdateDbModel(): PrismaPersonalBest {
+        return {
+            id: this.id,
+            exerciseId: this.exerciseId,
+            exerciseName: this.exerciseName,
+            measurementUnit: this.measurementUnit,
+            numberOfReps: this.numberOfReps ?? null,
+            timeInMinutes: parseInt(this.timeInMinutes ?? '0') ?? null,
+            weightInKg: this.weightInKg,
+            date: this.date,
+            amountAboveLastPb: this.amountAboveLastPersonalBest,
+            attemptId: this.attemptId,
+        }
+    }
+
+    public async add(): Promise<void> {
+        const prismaPersonalBest = this.mapToCreateDbModel();
+        await this.writeRepository.addPersonalBest(prismaPersonalBest);
+    }
+
+    public async update(): Promise<void> {
+        const prismaPersonalBest = this.mapToUpdateDbModel();
+        await this.writeRepository.updatePersonalBest(prismaPersonalBest);
+    }
 }
