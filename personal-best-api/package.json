@@ -21,7 +21,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.1",
+    "@prisma/client": "^6.19.2",
     "aws-amplify": "^6.15.0",
     "tsyringe": "^4.10.0"
   }

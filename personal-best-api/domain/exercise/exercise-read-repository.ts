@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { MeasurementUnit, PrismaClient } from '../../prisma/generated/client';
 import { Exercise, TrainingModality } from './Exercise';
 
 export interface IExerciseReadRepository {
@@ -17,7 +17,7 @@ export class ExerciseReadRepository implements IExerciseReadRepository {
       where: { id }
     });
 
-    return exercise ? this.mapToExercise(exercise) : null;
+    return exercise ? Exercise.mapFromDbModel(exercise) : null;
   }
 
   async getAllExercises(): Promise<Exercise[]> {
@@ -25,7 +25,7 @@ export class ExerciseReadRepository implements IExerciseReadRepository {
       orderBy: { name: 'asc' }
     });
 
-    return exercises.map(this.mapToExercise);
+    return exercises.map((e) => Exercise.mapFromDbModel(e));
   }
 
   async getExercisesByModality(modality: TrainingModality): Promise<Exercise[]> {
@@ -35,7 +35,17 @@ export class ExerciseReadRepository implements IExerciseReadRepository {
       },
       orderBy: { name: 'asc' }
     });
-    return exercises.map(this.mapToExercise);
+    return exercises.map((e) => Exercise.mapFromDbModel(e));
+  }
+
+  async getExercisesByMeasurementUnit(unit: MeasurementUnit): Promise<Exercise[]> {
+    const exercises = await this.prisma.exercise.findMany({
+      where: { 
+        measurementUnit: MeasurementUnit[unit] as any
+      },
+      orderBy: { name: 'asc' }
+    });
+    return exercises.map((e) => Exercise.mapFromDbModel(e));
   }
 
   async getExerciseByName(name: string): Promise<Exercise | null> {
@@ -48,19 +58,6 @@ export class ExerciseReadRepository implements IExerciseReadRepository {
       }
     });
 
-    return exercise ? this.mapToExercise(exercise) : null;
-  }
-
-  private mapToExercise(prismaExercise: any): Exercise {
-    return {
-      id: prismaExercise.id,
-      name: prismaExercise.name,
-      currentPersonalBestId: prismaExercise.currentPersonalBestId ?? undefined,
-      modality: TrainingModality[prismaExercise.modality as keyof typeof TrainingModality],
-      measurementUnit: prismaExercise.measurementUnit,
-      dateLastTrained: prismaExercise.dateLastTrained 
-        ? new Date(prismaExercise.dateLastTrained).getTime()
-        : 0
-    };
+    return exercise ? Exercise.mapFromDbModel(exercise) : null;
   }
 }

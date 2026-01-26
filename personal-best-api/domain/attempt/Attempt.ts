@@ -1,4 +1,4 @@
-import { MeasurementUnit } from "../common/MeasurementUnit";
+import { Attempt as PrismaAttempt } from "../../prisma/generated/client"
 
 // to-do should attempt be an aggregate
 // maybe an entity
@@ -27,5 +27,17 @@ export class Attempt {
         this.timeInMinutes = timeInMinutes;
         this.weightInKg = weightInKg;
         this.createdAt = dateInEpochMilliseconds;
+    }
+
+    public static mapFromDbModel(prismaAttempt: PrismaAttempt): Attempt {
+        return {
+            id: prismaAttempt.id,
+            exerciseId: prismaAttempt.exerciseId,
+            numberOfReps: prismaAttempt.numberOfReps?? undefined,
+            timeInMinutes: prismaAttempt.timeInMinutes?.toString()?? undefined,
+            weightInKg: prismaAttempt.weightInKg,
+            createdAt: prismaAttempt.createdAt.getUTCMilliseconds(),
+            updatedAt: prismaAttempt.updatedAt.getUTCMilliseconds()
+        }
     }
 }
