@@ -13,9 +13,8 @@ const schema = a.schema({
       name: a.string().required(),
       currentPersonalBestId: a.string(),
       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+      measurementUnit: a.enum(['minutes', 'reps']),
       dateLastTrained: a.datetime(),
-      createdAt: a.datetime(),
-      updatedAt: a.datetime(),
       // Relationship to attempts
       attempts: a.hasMany('Attempt', 'exerciseId')
     })
@@ -26,9 +25,9 @@ const schema = a.schema({
       id: a.id().required(),
       exerciseId: a.id().required(),
       date: a.datetime().required(),
-      measurementUnit: a.enum(['minutes', 'reps']),
-      number: a.integer().default(0),
-      weight: a.integer(),
+      numberOfReps: a.integer().default(0),
+      timeInMinutes: a.string(),
+      weightInKg: a.integer(),
       createdAt: a.datetime(),
       updatedAt: a.datetime(),
       // Relationship to exercise

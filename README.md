@@ -30,6 +30,12 @@
 - Jest
 - NPM
 
+# Local API Development
+- To use the Prisma ORM, run ```cd personal-best-api``` from your Terminal and run commands like ```npx prisma validate```. This validates your ```schema.prisma``` file
+- When you update this file with new DB models, run ```npx prisma validate``` and then ```npx prisma generate``` to regenerate the PrismaClient class that your data access layer uses to interact with the DB.
+- To seed the DB, get the Postgres connection string from AWS RDS and run ```export DB_CONNECTION_STRING='[connection string]'```
+- Run ```npx prisma db seed```
+
 # Summary of Technical Approach
 ## personal-best-api
 - GraphQL schema definition in TypeScript in ``` resource.ts ```

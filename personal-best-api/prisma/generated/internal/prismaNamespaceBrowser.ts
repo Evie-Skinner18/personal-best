@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models.ts'
-export type * from './prismaNamespace.ts'
+export type * from '../models'
+export type * from './prismaNamespace'
 
 export const Decimal = runtime.Decimal
 
@@ -87,7 +87,6 @@ export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typ
 export const AttemptScalarFieldEnum = {
   id: 'id',
   exerciseId: 'exerciseId',
-  date: 'date',
   numberOfReps: 'numberOfReps',
   timeInMinutes: 'timeInMinutes',
   weightInKg: 'weightInKg',

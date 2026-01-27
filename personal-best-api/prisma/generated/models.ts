@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/Exercise.ts'
-export type * from './models/Attempt.ts'
-export type * from './models/PersonalBestAggregate.ts'
-export type * from './commonInputTypes.ts'
+export type * from './models/Exercise'
+export type * from './models/Attempt'
+export type * from './models/PersonalBestAggregate'
+export type * from './commonInputTypes'

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.ts"
-import type * as Prisma from "../internal/prismaNamespace.ts"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Attempt
@@ -41,7 +41,6 @@ export type AttemptSumAggregateOutputType = {
 export type AttemptMinAggregateOutputType = {
   id: string | null
   exerciseId: string | null
-  date: Date | null
   numberOfReps: number | null
   timeInMinutes: number | null
   weightInKg: number | null
@@ -52,7 +51,6 @@ export type AttemptMinAggregateOutputType = {
 export type AttemptMaxAggregateOutputType = {
   id: string | null
   exerciseId: string | null
-  date: Date | null
   numberOfReps: number | null
   timeInMinutes: number | null
   weightInKg: number | null
@@ -63,7 +61,6 @@ export type AttemptMaxAggregateOutputType = {
 export type AttemptCountAggregateOutputType = {
   id: number
   exerciseId: number
-  date: number
   numberOfReps: number
   timeInMinutes: number
   weightInKg: number
@@ -88,7 +85,6 @@ export type AttemptSumAggregateInputType = {
 export type AttemptMinAggregateInputType = {
   id?: true
   exerciseId?: true
-  date?: true
   numberOfReps?: true
   timeInMinutes?: true
   weightInKg?: true
@@ -99,7 +95,6 @@ export type AttemptMinAggregateInputType = {
 export type AttemptMaxAggregateInputType = {
   id?: true
   exerciseId?: true
-  date?: true
   numberOfReps?: true
   timeInMinutes?: true
   weightInKg?: true
@@ -110,7 +105,6 @@ export type AttemptMaxAggregateInputType = {
 export type AttemptCountAggregateInputType = {
   id?: true
   exerciseId?: true
-  date?: true
   numberOfReps?: true
   timeInMinutes?: true
   weightInKg?: true
@@ -208,7 +202,6 @@ export type AttemptGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type AttemptGroupByOutputType = {
   id: string
   exerciseId: string
-  date: Date
   numberOfReps: number | null
   timeInMinutes: number | null
   weightInKg: number
@@ -242,7 +235,6 @@ export type AttemptWhereInput = {
   NOT?: Prisma.AttemptWhereInput | Prisma.AttemptWhereInput[]
   id?: Prisma.UuidFilter<"Attempt"> | string
   exerciseId?: Prisma.UuidFilter<"Attempt"> | string
-  date?: Prisma.DateTimeFilter<"Attempt"> | Date | string
   numberOfReps?: Prisma.IntNullableFilter<"Attempt"> | number | null
   timeInMinutes?: Prisma.IntNullableFilter<"Attempt"> | number | null
   weightInKg?: Prisma.IntFilter<"Attempt"> | number
@@ -255,7 +247,6 @@ export type AttemptWhereInput = {
 export type AttemptOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
-  date?: Prisma.SortOrder
   numberOfReps?: Prisma.SortOrderInput | Prisma.SortOrder
   timeInMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   weightInKg?: Prisma.SortOrder
@@ -271,7 +262,6 @@ export type AttemptWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AttemptWhereInput[]
   NOT?: Prisma.AttemptWhereInput | Prisma.AttemptWhereInput[]
   exerciseId?: Prisma.UuidFilter<"Attempt"> | string
-  date?: Prisma.DateTimeFilter<"Attempt"> | Date | string
   numberOfReps?: Prisma.IntNullableFilter<"Attempt"> | number | null
   timeInMinutes?: Prisma.IntNullableFilter<"Attempt"> | number | null
   weightInKg?: Prisma.IntFilter<"Attempt"> | number
@@ -284,7 +274,6 @@ export type AttemptWhereUniqueInput = Prisma.AtLeast<{
 export type AttemptOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
-  date?: Prisma.SortOrder
   numberOfReps?: Prisma.SortOrderInput | Prisma.SortOrder
   timeInMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   weightInKg?: Prisma.SortOrder
@@ -303,7 +292,6 @@ export type AttemptScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AttemptScalarWhereWithAggregatesInput | Prisma.AttemptScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Attempt"> | string
   exerciseId?: Prisma.UuidWithAggregatesFilter<"Attempt"> | string
-  date?: Prisma.DateTimeWithAggregatesFilter<"Attempt"> | Date | string
   numberOfReps?: Prisma.IntNullableWithAggregatesFilter<"Attempt"> | number | null
   timeInMinutes?: Prisma.IntNullableWithAggregatesFilter<"Attempt"> | number | null
   weightInKg?: Prisma.IntWithAggregatesFilter<"Attempt"> | number
@@ -313,7 +301,6 @@ export type AttemptScalarWhereWithAggregatesInput = {
 
 export type AttemptCreateInput = {
   id?: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -326,7 +313,6 @@ export type AttemptCreateInput = {
 export type AttemptUncheckedCreateInput = {
   id?: string
   exerciseId: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -337,7 +323,6 @@ export type AttemptUncheckedCreateInput = {
 
 export type AttemptUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -350,7 +335,6 @@ export type AttemptUpdateInput = {
 export type AttemptUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -362,7 +346,6 @@ export type AttemptUncheckedUpdateInput = {
 export type AttemptCreateManyInput = {
   id?: string
   exerciseId: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -372,7 +355,6 @@ export type AttemptCreateManyInput = {
 
 export type AttemptUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -383,7 +365,6 @@ export type AttemptUpdateManyMutationInput = {
 export type AttemptUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -404,7 +385,6 @@ export type AttemptOrderByRelationAggregateInput = {
 export type AttemptCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
-  date?: Prisma.SortOrder
   numberOfReps?: Prisma.SortOrder
   timeInMinutes?: Prisma.SortOrder
   weightInKg?: Prisma.SortOrder
@@ -421,7 +401,6 @@ export type AttemptAvgOrderByAggregateInput = {
 export type AttemptMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
-  date?: Prisma.SortOrder
   numberOfReps?: Prisma.SortOrder
   timeInMinutes?: Prisma.SortOrder
   weightInKg?: Prisma.SortOrder
@@ -432,7 +411,6 @@ export type AttemptMaxOrderByAggregateInput = {
 export type AttemptMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
-  date?: Prisma.SortOrder
   numberOfReps?: Prisma.SortOrder
   timeInMinutes?: Prisma.SortOrder
   weightInKg?: Prisma.SortOrder
@@ -493,10 +471,6 @@ export type AttemptUncheckedUpdateManyWithoutExerciseNestedInput = {
   deleteMany?: Prisma.AttemptScalarWhereInput | Prisma.AttemptScalarWhereInput[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -511,6 +485,10 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type AttemptCreateNestedOneWithoutPersonalBestAggregatesInput = {
@@ -529,7 +507,6 @@ export type AttemptUpdateOneRequiredWithoutPersonalBestAggregatesNestedInput = {
 
 export type AttemptCreateWithoutExerciseInput = {
   id?: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -540,7 +517,6 @@ export type AttemptCreateWithoutExerciseInput = {
 
 export type AttemptUncheckedCreateWithoutExerciseInput = {
   id?: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -581,7 +557,6 @@ export type AttemptScalarWhereInput = {
   NOT?: Prisma.AttemptScalarWhereInput | Prisma.AttemptScalarWhereInput[]
   id?: Prisma.UuidFilter<"Attempt"> | string
   exerciseId?: Prisma.UuidFilter<"Attempt"> | string
-  date?: Prisma.DateTimeFilter<"Attempt"> | Date | string
   numberOfReps?: Prisma.IntNullableFilter<"Attempt"> | number | null
   timeInMinutes?: Prisma.IntNullableFilter<"Attempt"> | number | null
   weightInKg?: Prisma.IntFilter<"Attempt"> | number
@@ -591,7 +566,6 @@ export type AttemptScalarWhereInput = {
 
 export type AttemptCreateWithoutPersonalBestAggregatesInput = {
   id?: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -603,7 +577,6 @@ export type AttemptCreateWithoutPersonalBestAggregatesInput = {
 export type AttemptUncheckedCreateWithoutPersonalBestAggregatesInput = {
   id?: string
   exerciseId: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -629,7 +602,6 @@ export type AttemptUpdateToOneWithWhereWithoutPersonalBestAggregatesInput = {
 
 export type AttemptUpdateWithoutPersonalBestAggregatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -641,7 +613,6 @@ export type AttemptUpdateWithoutPersonalBestAggregatesInput = {
 export type AttemptUncheckedUpdateWithoutPersonalBestAggregatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -651,7 +622,6 @@ export type AttemptUncheckedUpdateWithoutPersonalBestAggregatesInput = {
 
 export type AttemptCreateManyExerciseInput = {
   id?: string
-  date: Date | string
   numberOfReps?: number | null
   timeInMinutes?: number | null
   weightInKg?: number
@@ -661,7 +631,6 @@ export type AttemptCreateManyExerciseInput = {
 
 export type AttemptUpdateWithoutExerciseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -672,7 +641,6 @@ export type AttemptUpdateWithoutExerciseInput = {
 
 export type AttemptUncheckedUpdateWithoutExerciseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -683,7 +651,6 @@ export type AttemptUncheckedUpdateWithoutExerciseInput = {
 
 export type AttemptUncheckedUpdateManyWithoutExerciseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   numberOfReps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   weightInKg?: Prisma.IntFieldUpdateOperationsInput | number
@@ -725,7 +692,6 @@ export type AttemptCountOutputTypeCountPersonalBestAggregatesArgs<ExtArgs extend
 export type AttemptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
-  date?: boolean
   numberOfReps?: boolean
   timeInMinutes?: boolean
   weightInKg?: boolean
@@ -739,7 +705,6 @@ export type AttemptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type AttemptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
-  date?: boolean
   numberOfReps?: boolean
   timeInMinutes?: boolean
   weightInKg?: boolean
@@ -751,7 +716,6 @@ export type AttemptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type AttemptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
-  date?: boolean
   numberOfReps?: boolean
   timeInMinutes?: boolean
   weightInKg?: boolean
@@ -763,7 +727,6 @@ export type AttemptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type AttemptSelectScalar = {
   id?: boolean
   exerciseId?: boolean
-  date?: boolean
   numberOfReps?: boolean
   timeInMinutes?: boolean
   weightInKg?: boolean
@@ -771,7 +734,7 @@ export type AttemptSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exerciseId" | "date" | "numberOfReps" | "timeInMinutes" | "weightInKg" | "createdAt" | "updatedAt", ExtArgs["result"]["attempt"]>
+export type AttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exerciseId" | "numberOfReps" | "timeInMinutes" | "weightInKg" | "createdAt" | "updatedAt", ExtArgs["result"]["attempt"]>
 export type AttemptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exercise?: boolean | Prisma.ExerciseDefaultArgs<ExtArgs>
   personalBestAggregates?: boolean | Prisma.Attempt$personalBestAggregatesArgs<ExtArgs>
@@ -793,7 +756,6 @@ export type $AttemptPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     exerciseId: string
-    date: Date
     numberOfReps: number | null
     timeInMinutes: number | null
     weightInKg: number
@@ -1226,7 +1188,6 @@ export interface Prisma__AttemptClient<T, Null = never, ExtArgs extends runtime.
 export interface AttemptFieldRefs {
   readonly id: Prisma.FieldRef<"Attempt", 'String'>
   readonly exerciseId: Prisma.FieldRef<"Attempt", 'String'>
-  readonly date: Prisma.FieldRef<"Attempt", 'DateTime'>
   readonly numberOfReps: Prisma.FieldRef<"Attempt", 'Int'>
   readonly timeInMinutes: Prisma.FieldRef<"Attempt", 'Int'>
   readonly weightInKg: Prisma.FieldRef<"Attempt", 'Int'>

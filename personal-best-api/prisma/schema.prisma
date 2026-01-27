@@ -42,7 +42,6 @@ model Exercise {
 model Attempt {
   id            String   @id @default(uuid()) @db.Uuid
   exerciseId    String   @map("exercise_id") @db.Uuid
-  date          DateTime
   numberOfReps  Int?
   timeInMinutes Int?
   weightInKg    Int      @default(0)
@@ -54,7 +53,6 @@ model Attempt {
   personalBestAggregates PersonalBestAggregate[]
 
   @@index([exerciseId])
-  @@index([date])
   @@map("attempts")
 }
 
