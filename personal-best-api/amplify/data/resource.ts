@@ -8,37 +8,35 @@ The actual data storage is handled via SQL queries in Lambda functions.
 =========================================================================*/
 
 const schema = a.schema({
-  // Custom types to match our database schema
   Exercise: a.customType({
     id: a.string(),
     name: a.string(),
     currentPersonalBestId: a.string(),
     modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
+    measurementUnit: a.enum(['minutes', 'reps']),
     dateLastTrained: a.datetime(),
-    createdAt: a.datetime(),
-    updatedAt: a.datetime(),
   }),
 
   Attempt: a.customType({
     id: a.string(),
     exerciseId: a.string(),
     date: a.datetime(),
-    measurementUnit: a.enum(['minutes', 'reps']),
-    timeInMinutes: a.string(),
     numberOfReps: a.integer(),
+    timeInMinutes: a.string(),
     weightInKg: a.integer(),
     createdAt: a.datetime(),
     updatedAt: a.datetime(),
   }),
 
-  PersonalBestAggregate: a.customType({
+  PersonalBest: a.customType({
     id: a.string(),
     attemptId: a.string(),
     exerciseId: a.string(),
     exerciseName: a.string(),
     measurementUnit: a.enum(['minutes', 'reps']),
-    number: a.integer(),
-    weight: a.integer(),
+    numberOfReps: a.integer(),
+    timeInMinutes: a.string(),
+    weightInKg: a.integer(),
     date: a.datetime(),
     amountAboveLastPersonalBest: a.integer(),
   }),

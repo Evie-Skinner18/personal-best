@@ -1,6 +1,7 @@
 import { MeasurementUnit } from "../common/MeasurementUnit";
 
 export interface PersonalBestDto {
+    id: string;
     attemptId: string;
     exerciseId: string;
     exerciseName: string;

@@ -65,8 +65,9 @@ export class PersonalBestAggregate {
         
     }
 
-    public toSchemaFormat(): PersonalBestDto {
+    public toDto(): PersonalBestDto {
         return {
+        id: this.id,
         attemptId: this.attemptId,
         exerciseId: this.exerciseId,
         exerciseName: this.exerciseName,

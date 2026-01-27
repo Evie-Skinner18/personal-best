@@ -1,19 +1,17 @@
 import type { Schema } from "../data/resource"
-import { PersonalBestAggregate, PersonalBestDto } from "../../domain/personal-best/PersonalBestAggregate";
+import { PersonalBestAggregate } from "../../domain/personal-best/PersonalBestAggregate";
 import { Exercise, TrainingModality } from "../../domain/exercise/Exercise";
 import { Attempt } from "../../domain/attempt/Attempt";
 import { IAttemptReadRepository, AttemptReadRepository } from "../../domain/attempt/attempt-read-repository"
 import { container } from "tsyringe";
 import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../domain/personal-best/personal-best-write-repository";
 import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
+import { PersonalBestDto } from "../../domain/personal-best/personal-best-dto";
 
-type GetPersonalBestsEvent = {
-    exerciseName?: string;
-    modality?: TrainingModality;
-}
 
-// to-do typpe the event properly
-export const handler: Schema["getPersonalBests"]["functionHandler"] = async (event): Promise<PersonalBestDto[]> => {
+type GetPersonalBestsHandler = Schema["getPersonalBests"]["functionHandler"]
+
+export const handler: GetPersonalBestsHandler = async (event): Promise<PersonalBestDto[]> => {
   container.register<IAttemptReadRepository>(AttemptReadRepository,  {useClass: AttemptReadRepository});
   container.register<IPersonalBestWriteRepository>(PersonalBestWriteRepository,  {useClass: PersonalBestWriteRepository});
 
@@ -37,7 +35,7 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
   };
 
   // WIP
-//   const exerciseReadRepository = new ExerciseReadRepository(await getPrismaClient());
+  // const exerciseReadRepository = new ExerciseReadRepository(await getPrismaClient());
 // const exercise = await repository.getExerciseById('some-id');
 
   const allKbSwingAttemptsSoFar: Attempt[] = await attemptReadRepository.getAllAttemptsForExerciseId(kettlebellSwing.id);
@@ -49,7 +47,7 @@ export const handler: Schema["getPersonalBests"]["functionHandler"] = async (eve
 
   const pb = new PersonalBestAggregate(kettlebellSwing, latestKbSwingAttempt, pbWriteRepository);
   return [
-    pb.toSchemaFormat()
+    pb.toDto()
   ]
 }
 

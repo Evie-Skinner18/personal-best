@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "paths": {
       "$amplify/*": [
-        "../.amplify/generated/*"
+        "./.amplify/generated/*"
       ]
     }
   }

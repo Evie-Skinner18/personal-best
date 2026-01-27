@@ -10,26 +10,37 @@
 1. `cd personal-best-api`
 2. Login to an AWS account using the CLI. For me I use an alias command `aws-login-midas`
 3. Select the sandbox option
-4. `npx ampx sandbox --profile midas`
+4. Deploy the AWS Amplify stack to the sandbox account `npx ampx sandbox --profile midas`
 
 
 # Tools and Technologies Used
 - React
 - React Testing Library
 - ChartJS
+- Styled Components
 - Vite
 - GraphQL
+- AWS AppSync
 - AWS Lambda
-- TypeScript
-- Jest
-- Styled Components
-- AWS Amplify
-- NPM
+- AWS Amplify (Gen 2 code-first GraphQL schema)
+- AWS RDS
 - Postgres
 - Prisma ORM
+- TypeScript
+- Jest
+- NPM
+
+# Summary of Technical Approach
+## personal-best-api
+- GraphQL schema definition in TypeScript in ``` resource.ts ```
+- AWS Amplify generates the GraphQL schema and the AppSync resolvers on every deployment
+- Lambda functions executed by the AppSync resolvers coordinate business logic. E.g ``` get-personal-bests-handler.ts ```
+- Domain models enact the business logic using a Domain Driven Design approach. E.g ``` PersonalBestAggregate.ts ```
+- Read repositories retrieve entities and aggregates from a PostgreSQL RDS database. E.g ``` exercise-read-repository.ts ```
+- Write repositories modify entities and aggregates in the same DB. E.g ``` personal-best-write-repository.ts ```
 
 # AI Usage
-I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before.
+I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before. I also used it to help me understand how Amplify works, as this technology was also completely new to me.
 
 ## AI Prompts Used
 - Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
