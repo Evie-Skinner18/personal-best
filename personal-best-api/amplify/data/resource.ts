@@ -53,13 +53,10 @@ const schema = a.schema({
     .handler(a.handler.function(getPersonalBests)),
 
   // to-do add handlers for these
-//   getExercises: a
-//     .query()
-//     .arguments({
-//       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
-//     })
-//     .returns(a.ref('Exercise').array())
-//     .authorization(allow => [allow.guest()]),
+  getExercises: a
+    .query()
+    .returns(a.ref('Exercise').array())
+    .authorization(allow => [allow.guest()]),
 
 //   getAttempts: a
 //     .query()

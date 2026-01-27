@@ -3,6 +3,7 @@ import { PersonalBestDto } from "./personal-best-dto";
 import { Attempt } from "../attempt/Attempt";
 import { Exercise } from "../exercise/Exercise";
 import { IPersonalBestWriteRepository } from "./personal-best-write-repository";
+import 'reflect-metadata';
 import { inject, injectable } from "tsyringe";
 import { PrismaPersonalBestWithoutId } from "./prisma-pb-without-id";
 import { PersonalBestAggregate as PrismaPersonalBest } from "../../prisma/generated/client";

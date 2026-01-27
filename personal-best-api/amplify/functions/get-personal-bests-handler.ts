@@ -3,6 +3,7 @@ import { PersonalBestAggregate } from "../../domain/personal-best/PersonalBestAg
 import { Exercise, TrainingModality } from "../../domain/exercise/Exercise";
 import { Attempt } from "../../domain/attempt/Attempt";
 import { IAttemptReadRepository, AttemptReadRepository } from "../../domain/attempt/attempt-read-repository"
+import 'reflect-metadata';
 import { container } from "tsyringe";
 import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../domain/personal-best/personal-best-write-repository";
 import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
