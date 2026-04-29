@@ -7,21 +7,42 @@ export class Exercise {
 	currentPersonalBestId?: string;
     modality!: TrainingModality;
     measurementUnit!: MeasurementUnit;
-    dateLastTrained!: number
+    dateLastTrained?: number
 
-    // to-do miught need a ctor
+    constructor(
+      id: string,
+      name: string,
+      modality: TrainingModality,
+      measurementUnit: MeasurementUnit,
+      currentPersonalBestId?: string,
+      dateLastTrained?: number
+    ) {
+      this.id = id,
+      this.name = name,
+      this.modality = modality,
+      this.measurementUnit = measurementUnit,
+      this.currentPersonalBestId = currentPersonalBestId,
+      this.dateLastTrained = dateLastTrained
+    }
 
     public static mapFromDbModel(prismaExercise: PrismaExercise): Exercise {
+      return new Exercise(
+        prismaExercise.id,
+        prismaExercise.name,
+        TrainingModality[prismaExercise.modality as keyof typeof TrainingModality],
+        prismaExercise.measurementUnit as MeasurementUnit,
+        prismaExercise.currentPersonalBestId ?? undefined,
+        prismaExercise.dateLastTrained 
+          ? new Date(prismaExercise.dateLastTrained).getTime()
+          : 0
+        )
+  }
+
+  public static mapToDbModel(): PrismaExercise {
     return {
-      id: prismaExercise.id,
-      name: prismaExercise.name,
-      currentPersonalBestId: prismaExercise.currentPersonalBestId ?? undefined,
-      modality: TrainingModality[prismaExercise.modality as keyof typeof TrainingModality],
-      measurementUnit: prismaExercise.measurementUnit as MeasurementUnit,
-      dateLastTrained: prismaExercise.dateLastTrained 
-        ? new Date(prismaExercise.dateLastTrained).getTime()
-        : 0
-    };
+      id: this,
+
+    }
   }
 }
 
