@@ -1,6 +1,6 @@
 import { MeasurementUnit } from "../common/MeasurementUnit"
-import { Exercise as PrismaExercise } from "../../prisma/generated/client"
-// value object but it has an id because I want to be able to link an attempt to an exercise by id
+import { Exercise as PrismaExercise, TrainingModality as PrismaTrainingModality } from "../../prisma/generated/client"
+
 export class Exercise {
     id!: string;
 	name!: string;
@@ -38,20 +38,27 @@ export class Exercise {
         )
   }
 
-  public static mapToDbModel(): PrismaExercise {
-    return {
-      id: this,
+  public mapToDbModel(): PrismaExercise {
+    const currentPbId: string | null = this.currentPersonalBestId? this.currentPersonalBestId : null;
+    const dateLastTrainedAsDate: Date | null = this.dateLastTrained? new Date(this.dateLastTrained) : null;
 
+    return {
+      id: this.id,
+      name: this.name,
+      currentPersonalBestId: currentPbId,
+      modality: this.modality as PrismaTrainingModality,
+      dateLastTrained: dateLastTrainedAsDate,
+      measurementUnit: this.measurementUnit
     }
   }
 }
 
 export enum TrainingModality {
-    Karate,
-    Calisthenics,
-    BJJ,
-    Weights,
-    Movement,
-    Running
+  Karate = 'Karate',
+  Calisthenics = 'Calisthenics',
+  BJJ = 'BJJ',
+  Weights = 'Weights',
+  Movement = 'Movement',
+  Running = 'Running'
 }
 

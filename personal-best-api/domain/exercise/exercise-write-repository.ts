@@ -1,33 +1,40 @@
-import { PrismaClient, TrainingModality } from '../../prisma/generated/client';
-import { EnumTrainingModalityFieldUpdateOperationsInput } from '../../prisma/generated/models';
+import { PrismaClient } from '../../prisma/generated/client';
 import { Exercise } from './Exercise';
 
 export interface IExerciseWriteRepository {
-  updateExercise(id: string): Promise<Exercise | null>;
-  deleteExercise(): Promise<Exercise[]>;
+  updateExercise(id: string, updatedExercise: Exercise): Promise<void>;
+  deleteExercise(id: string): Promise<void>;
 }
 
 export class ExerciseWriteRepository implements IExerciseWriteRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-//   const user = await prisma.user.update({
-//   where: { id: 1 },
-//   data: { email: "alice@prisma.io" },
-// });
-    async updateExercise(id: string, updatedExercise: Exercise): Promise<Exercise | null> {
-        await this.prisma.exercise.update({
+    async updateExercise(id: string, updatedExercise: Exercise): Promise<void> {
+        const prismaExercise = updatedExercise.mapToDbModel();
+
+        try {
+            await this.prisma.exercise.update({
             where: {id}, 
             data: { 
-                name: updatedExercise.name,  
-                currentPersonalBestId: updatedExercise.currentPersonalBestId,
-                // yuck
-                modality: updatedExercise.modality as unknown as TrainingModality | EnumTrainingModalityFieldUpdateOperationsInput | undefined,
-                dateLastTrained: updatedExercise.dateLastTrained,
-                measurementUnit: updatedExercise.measurementUnit
+                name: prismaExercise.name,  
+                currentPersonalBestId: prismaExercise.currentPersonalBestId,
+                modality: prismaExercise.modality,
+                dateLastTrained: prismaExercise.dateLastTrained,
+                measurementUnit: prismaExercise.measurementUnit
              }})
+        } catch (error) {
+            throw new Error(`Could not update exercise with id ${id} and name ${updatedExercise.name} in Prisma. ${error}`);
+        }
 
     }
-    deleteExercise(): Promise<Exercise[]> {
-        throw new Error('Method not implemented.');
+
+    async deleteExercise(id: string): Promise<void> {
+        try {
+            await this.prisma.exercise.delete({
+            where: { id }
+        })
+        } catch (error) {
+            throw new Error(`Could not delete exercise with id ${id} sin Prisma. ${error}`);
+        }
     }
 }
