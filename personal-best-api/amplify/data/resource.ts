@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { getPersonalBests } from '../functions/get-personal-bests';
+import { getExercises } from '../functions/get-exercises';
 
 /*== Custom RDS-based graphQL API Schema ========================================
 This schema defines the API interface for our PostgreSQL RDS backend.
@@ -56,7 +57,8 @@ const schema = a.schema({
   getExercises: a
     .query()
     .returns(a.ref('Exercise').array())
-    .authorization(allow => [allow.guest()]),
+    .authorization(allow => [allow.guest()])
+    .handler(a.handler.function(getExercises)),
 
 //   getAttempts: a
 //     .query()

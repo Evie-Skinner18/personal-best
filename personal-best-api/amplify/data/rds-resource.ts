@@ -34,15 +34,6 @@ const schema = a.schema({
       exercise: a.belongsTo('Exercise', 'exerciseId')
     })
     .authorization((allow) => [allow.guest()]),
-
-  getPersonalBests: a
-    .query()
-    .arguments({
-      name: a.string(),
-    })
-    .returns(a.string())
-    .authorization(allow => [allow.guest()])
-    .handler(a.handler.function(getPersonalBests)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

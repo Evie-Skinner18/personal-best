@@ -9,7 +9,6 @@ export interface IExerciseReadRepository {
 }
 
 export class ExerciseReadRepository implements IExerciseReadRepository {
-    // help is the PrismaClient an interface?
   constructor(private readonly prisma: PrismaClient) {}
 
   async getExerciseById(id: string): Promise<Exercise | null> {

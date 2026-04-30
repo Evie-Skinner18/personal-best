@@ -3,15 +3,17 @@
 ## An app to help me track my taining progress
 
 ## How to run the app
+
+# Front end
 1. `cd personal-best-ui`
 2. `npm run dev`
 
-
+# Back end
 1. `cd personal-best-api`
 2. Login to an AWS account using the CLI. For me I use an alias command `aws-login-midas`
 3. Select the sandbox option
 4. Deploy the AWS Amplify stack to the sandbox account `npx ampx sandbox --profile midas`
-
+5. Once the RDS database has been deployed, go to the AWS console and retrieve the DB connection string
 
 # Tools and Technologies Used
 - React
