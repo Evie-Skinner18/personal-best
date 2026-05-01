@@ -27,12 +27,13 @@
 - AWS Amplify (Gen 2 code-first GraphQL schema)
 - AWS RDS
 - Postgres
-- Prisma ORM
+- Prisma ORM 6
 - TypeScript
 - Jest
 - NPM
 
 # Local API Development
+- You must be in the API directory to run Prisma commands otherwise it will prompt you to install Prisma 7, which doesn't work with Amplify
 - To use the Prisma ORM, run ```cd personal-best-api``` from your Terminal and run commands like ```npx prisma validate```. This validates your ```schema.prisma``` file
 - When you update this file with new DB models, run ```npx prisma validate``` and then ```npx prisma generate``` to regenerate the PrismaClient class that your data access layer uses to interact with the DB.
 - To seed the DB, get the Postgres connection string from AWS RDS and run ```export DB_CONNECTION_STRING='[connection string]'```
@@ -55,3 +56,6 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 - Can you tell me why I have been able to create a graphQL API using AWS amplify without a graphQL schema in the personal-best-api directory?
 - hi, please can you make me a repository in this file that connects to the Exercise table of my SQL database defined in the Prisma code? It should be able to only execute read operations
 - hi, please can you go through the merge conflicts in my personal-best-api/package.json file and accept the <<<HEAD current change for each one?
+- hi, my Amplify stack is not deploying my get-exercises-handler due to an error. Specifically, when I try to deploy this handler as-is (using the ExerciseReadRepository ), Amplify cannot find a file called @prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs. Can you help me understand why my other handler that uses similar repositories connected to Prisma deploys fine but this one doesn't?
+- hi, why do I have two prisma schema files now? I think you generated a second one and I don't know which is the correct one to use. I want to stay on Prisma 6
+- hi, I'm struggling to connect my Prisma schema to my Postgres DB hosted on AWS RDS. When I run prisma validate, the Prisma schema gives me: Error validating datasource db: the URL must start with the protocol postgresql:// or postgres://
