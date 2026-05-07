@@ -19,10 +19,7 @@ const {
   skip,
   Decimal,
   Debug,
-  DbNull,
-  JsonNull,
-  AnyNull,
-  NullTypes,
+  objectEnumValues,
   makeStrictEnum,
   Extensions,
   warnOnce,
@@ -30,7 +27,7 @@ const {
   Public,
   getRuntime,
   createParam,
-} = require('./runtime/client.js')
+} = require('./runtime/binary.js')
 
 
 const Prisma = {}
@@ -39,12 +36,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 6.19.3
+ * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 Prisma.prismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "6.19.3",
+  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -72,11 +69,15 @@ Prisma.defineExtension = Extensions.defineExtension
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = DbNull
-Prisma.JsonNull = JsonNull
-Prisma.AnyNull = AnyNull
+Prisma.DbNull = objectEnumValues.instances.DbNull
+Prisma.JsonNull = objectEnumValues.instances.JsonNull
+Prisma.AnyNull = objectEnumValues.instances.AnyNull
 
-Prisma.NullTypes = NullTypes
+Prisma.NullTypes = {
+  DbNull: objectEnumValues.classes.DbNull,
+  JsonNull: objectEnumValues.classes.JsonNull,
+  AnyNull: objectEnumValues.classes.AnyNull
+}
 
 
 
@@ -162,27 +163,100 @@ exports.Prisma.ModelName = {
  * Create the Client
  */
 const config = {
-  "previewFeatures": [],
-  "clientVersion": "7.3.0",
-  "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "/Users/evelineskinner/side-projects/personal-best/personal-best-api/prisma/generated",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "binary"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "darwin-arm64",
+        "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
+      }
+    ],
+    "previewFeatures": [],
+    "sourceFilePath": "/Users/evelineskinner/side-projects/personal-best/personal-best-api/prisma/schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
+  },
+  "relativePath": "..",
+  "clientVersion": "6.19.3",
+  "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
+  "datasourceNames": [
+    "db"
+  ],
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum TrainingModality {\n  Karate\n  Calisthenics\n  BJJ\n  Weights\n  Movement\n  Running\n}\n\nenum MeasurementUnit {\n  minutes\n  reps\n}\n\nmodel Exercise {\n  id                     String                  @id @default(uuid()) @db.Uuid\n  name                   String                  @db.VarChar(255)\n  currentPersonalBestId  String?                 @map(\"current_personal_best_id\") @db.Uuid\n  modality               TrainingModality\n  dateLastTrained        DateTime?               @map(\"date_last_trained\")\n  measurementUnit        MeasurementUnit         @map(\"measurement_unit\")\n  attempts               Attempt[]\n  personalBestAggregates PersonalBestAggregate[]\n\n  @@index([modality])\n  @@index([name])\n  @@map(\"exercises\")\n}\n\nmodel Attempt {\n  id            String   @id @default(uuid()) @db.Uuid\n  exerciseId    String   @map(\"exercise_id\") @db.Uuid\n  numberOfReps  Int?\n  timeInMinutes Int?\n  weightInKg    Int      @default(0)\n  createdAt     DateTime @default(now()) @map(\"created_at\")\n  updatedAt     DateTime @updatedAt @map(\"updated_at\")\n\n  // Relations\n  exercise               Exercise                @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  personalBestAggregates PersonalBestAggregate[]\n\n  @@index([exerciseId])\n  @@map(\"attempts\")\n}\n\nmodel PersonalBestAggregate {\n  id                String          @id @default(uuid()) @db.Uuid\n  attemptId         String          @map(\"attempt_id\") @db.Uuid\n  exerciseId        String          @map(\"exercise_id\") @db.Uuid\n  exerciseName      String          @map(\"exercise_name\") @db.VarChar(255)\n  measurementUnit   MeasurementUnit @map(\"measurement_unit\")\n  numberOfReps      Int?\n  timeInMinutes     Int?\n  weightInKg        Int             @default(0)\n  date              DateTime\n  amountAboveLastPb Int             @default(0)\n\n  // Relations\n  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)\n\n  @@index([attemptId])\n  @@index([exerciseId])\n  @@map(\"personalbests\")\n}\n"
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "DB_CONNECTION_STRING",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated\"\n  engineType    = \"binary\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DB_CONNECTION_STRING\")\n}\n\nenum TrainingModality {\n  Karate\n  Calisthenics\n  BJJ\n  Weights\n  Movement\n  Running\n}\n\nenum MeasurementUnit {\n  minutes\n  reps\n}\n\nmodel Exercise {\n  id                     String                  @id @default(uuid()) @db.Uuid\n  name                   String                  @db.VarChar(255)\n  currentPersonalBestId  String?                 @map(\"current_personal_best_id\") @db.Uuid\n  modality               TrainingModality\n  dateLastTrained        DateTime?               @map(\"date_last_trained\")\n  measurementUnit        MeasurementUnit         @map(\"measurement_unit\")\n  attempts               Attempt[]\n  personalBestAggregates PersonalBestAggregate[]\n\n  @@index([modality])\n  @@index([name])\n  @@map(\"exercises\")\n}\n\nmodel Attempt {\n  id            String   @id @default(uuid()) @db.Uuid\n  exerciseId    String   @map(\"exercise_id\") @db.Uuid\n  numberOfReps  Int?\n  timeInMinutes Int?\n  weightInKg    Int      @default(0)\n  createdAt     DateTime @default(now()) @map(\"created_at\")\n  updatedAt     DateTime @updatedAt @map(\"updated_at\")\n\n  // Relations\n  exercise               Exercise                @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  personalBestAggregates PersonalBestAggregate[]\n\n  @@index([exerciseId])\n  @@map(\"attempts\")\n}\n\nmodel PersonalBestAggregate {\n  id                String          @id @default(uuid()) @db.Uuid\n  attemptId         String          @map(\"attempt_id\") @db.Uuid\n  exerciseId        String          @map(\"exercise_id\") @db.Uuid\n  exerciseName      String          @map(\"exercise_name\") @db.VarChar(255)\n  measurementUnit   MeasurementUnit @map(\"measurement_unit\")\n  numberOfReps      Int?\n  timeInMinutes     Int?\n  weightInKg        Int             @default(0)\n  date              DateTime\n  amountAboveLastPb Int             @default(0)\n\n  // Relations\n  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)\n\n  @@index([attemptId])\n  @@index([exerciseId])\n  @@map(\"personalbests\")\n}\n",
+  "inlineSchemaHash": "ad451912956629fcac2fcc80270f563c6737df60f53c211a9855d64f1cb7562e",
+  "copyEngine": true
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Exercise\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currentPersonalBestId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"current_personal_best_id\"},{\"name\":\"modality\",\"kind\":\"enum\",\"type\":\"TrainingModality\"},{\"name\":\"dateLastTrained\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"date_last_trained\"},{\"name\":\"measurementUnit\",\"kind\":\"enum\",\"type\":\"MeasurementUnit\",\"dbName\":\"measurement_unit\"},{\"name\":\"attempts\",\"kind\":\"object\",\"type\":\"Attempt\",\"relationName\":\"AttemptToExercise\"},{\"name\":\"personalBestAggregates\",\"kind\":\"object\",\"type\":\"PersonalBestAggregate\",\"relationName\":\"ExerciseToPersonalBestAggregate\"}],\"dbName\":\"exercises\"},\"Attempt\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exerciseId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"exercise_id\"},{\"name\":\"numberOfReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeInMinutes\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"weightInKg\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"updated_at\"},{\"name\":\"exercise\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"AttemptToExercise\"},{\"name\":\"personalBestAggregates\",\"kind\":\"object\",\"type\":\"PersonalBestAggregate\",\"relationName\":\"AttemptToPersonalBestAggregate\"}],\"dbName\":\"attempts\"},\"PersonalBestAggregate\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attemptId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"attempt_id\"},{\"name\":\"exerciseId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"exercise_id\"},{\"name\":\"exerciseName\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"exercise_name\"},{\"name\":\"measurementUnit\",\"kind\":\"enum\",\"type\":\"MeasurementUnit\",\"dbName\":\"measurement_unit\"},{\"name\":\"numberOfReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeInMinutes\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"weightInKg\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"amountAboveLastPb\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"exercise\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"ExerciseToPersonalBestAggregate\"},{\"name\":\"attempt\",\"kind\":\"object\",\"type\":\"Attempt\",\"relationName\":\"AttemptToPersonalBestAggregate\"}],\"dbName\":\"personalbests\"}},\"enums\":{},\"types\":{}}")
-defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.compilerWasm = {
-      getRuntime: async () => require('./query_compiler_fast_bg.js'),
-      getQueryCompilerWasmModule: async () => {
-        const { Buffer } = require('node:buffer')
-        const { wasm } = require('./query_compiler_fast_bg.wasm-base64.js')
-        const queryCompilerWasmFileBytes = Buffer.from(wasm, 'base64')
+const fs = require('fs')
 
-        return new WebAssembly.Module(queryCompilerWasmFileBytes)
-      },
-      importName: './query_compiler_fast_bg.js',
-    }
+config.dirname = __dirname
+if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
+  const alternativePaths = [
+    "prisma/generated",
+    "generated",
+  ]
+  
+  const alternativePath = alternativePaths.find((altPath) => {
+    return fs.existsSync(path.join(process.cwd(), altPath, 'schema.prisma'))
+  }) ?? alternativePaths[0]
+
+  config.dirname = path.join(process.cwd(), alternativePath)
+  config.isBundled = true
+}
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Exercise\":{\"dbName\":\"exercises\",\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"default\":{\"name\":\"uuid\",\"args\":[4]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"name\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"VarChar\",[\"255\"]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"currentPersonalBestId\",\"dbName\":\"current_personal_best_id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"modality\",\"kind\":\"enum\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"TrainingModality\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"dateLastTrained\",\"dbName\":\"date_last_trained\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"DateTime\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"measurementUnit\",\"dbName\":\"measurement_unit\",\"kind\":\"enum\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"MeasurementUnit\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"attempts\",\"kind\":\"object\",\"isList\":true,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Attempt\",\"nativeType\":null,\"relationName\":\"AttemptToExercise\",\"relationFromFields\":[],\"relationToFields\":[],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"personalBestAggregates\",\"kind\":\"object\",\"isList\":true,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"PersonalBestAggregate\",\"nativeType\":null,\"relationName\":\"ExerciseToPersonalBestAggregate\",\"relationFromFields\":[],\"relationToFields\":[],\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false},\"Attempt\":{\"dbName\":\"attempts\",\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"default\":{\"name\":\"uuid\",\"args\":[4]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"exerciseId\",\"dbName\":\"exercise_id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":true,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"numberOfReps\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"timeInMinutes\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"weightInKg\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"Int\",\"nativeType\":null,\"default\":0,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"createdAt\",\"dbName\":\"created_at\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"DateTime\",\"nativeType\":null,\"default\":{\"name\":\"now\",\"args\":[]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"updatedAt\",\"dbName\":\"updated_at\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"DateTime\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":true},{\"name\":\"exercise\",\"kind\":\"object\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Exercise\",\"nativeType\":null,\"relationName\":\"AttemptToExercise\",\"relationFromFields\":[\"exerciseId\"],\"relationToFields\":[\"id\"],\"relationOnDelete\":\"Cascade\",\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"personalBestAggregates\",\"kind\":\"object\",\"isList\":true,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"PersonalBestAggregate\",\"nativeType\":null,\"relationName\":\"AttemptToPersonalBestAggregate\",\"relationFromFields\":[],\"relationToFields\":[],\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false},\"PersonalBestAggregate\":{\"dbName\":\"personalbests\",\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"default\":{\"name\":\"uuid\",\"args\":[4]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"attemptId\",\"dbName\":\"attempt_id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":true,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"exerciseId\",\"dbName\":\"exercise_id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":true,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"Uuid\",[]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"exerciseName\",\"dbName\":\"exercise_name\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":[\"VarChar\",[\"255\"]],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"measurementUnit\",\"dbName\":\"measurement_unit\",\"kind\":\"enum\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"MeasurementUnit\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"numberOfReps\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"timeInMinutes\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"weightInKg\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"Int\",\"nativeType\":null,\"default\":0,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"date\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"DateTime\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"amountAboveLastPb\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"Int\",\"nativeType\":null,\"default\":0,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"exercise\",\"kind\":\"object\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Exercise\",\"nativeType\":null,\"relationName\":\"ExerciseToPersonalBestAggregate\",\"relationFromFields\":[\"exerciseId\"],\"relationToFields\":[\"id\"],\"relationOnDelete\":\"Cascade\",\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"attempt\",\"kind\":\"object\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Attempt\",\"nativeType\":null,\"relationName\":\"AttemptToPersonalBestAggregate\",\"relationFromFields\":[\"attemptId\"],\"relationToFields\":[\"id\"],\"relationOnDelete\":\"Cascade\",\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false}},\"enums\":{\"TrainingModality\":{\"values\":[{\"name\":\"Karate\",\"dbName\":null},{\"name\":\"Calisthenics\",\"dbName\":null},{\"name\":\"BJJ\",\"dbName\":null},{\"name\":\"Weights\",\"dbName\":null},{\"name\":\"Movement\",\"dbName\":null},{\"name\":\"Running\",\"dbName\":null}],\"dbName\":null},\"MeasurementUnit\":{\"values\":[{\"name\":\"minutes\",\"dbName\":null},{\"name\":\"reps\",\"dbName\":null}],\"dbName\":null}},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = undefined
+config.compilerWasm = undefined
+
+
+const { warnEnvConflicts } = require('./runtime/binary.js')
+
+warnEnvConflicts({
+    rootEnvPath: config.relativeEnvPaths.rootEnvPath && path.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
+    schemaEnvPath: config.relativeEnvPaths.schemaEnvPath && path.resolve(config.dirname, config.relativeEnvPaths.schemaEnvPath)
+})
 
 const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query-engine-darwin-arm64");
+path.join(process.cwd(), "prisma/generated/query-engine-darwin-arm64")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query-engine-rhel-openssl-3.0.x");
+path.join(process.cwd(), "prisma/generated/query-engine-rhel-openssl-3.0.x")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "prisma/generated/schema.prisma")

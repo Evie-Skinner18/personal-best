@@ -15,7 +15,7 @@ export class ExerciseReadRepository implements IExerciseReadRepository {
     const exercise = await this.prisma.exercise.findUnique({
       where: { id }
     });
-
+    
     return exercise ? Exercise.mapFromDbModel(exercise) : null;
   }
 

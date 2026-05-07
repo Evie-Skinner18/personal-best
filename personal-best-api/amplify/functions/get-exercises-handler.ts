@@ -16,6 +16,9 @@ export const handler = async (event: any): Promise<Exercise[]> => {
 
   const allExercises: Exercise[] = await exerciseReadRepository.getAllExercises();  
 
+      console.log(allExercises);
+
+
   // to-do map to DTO
   return allExercises;
 }

@@ -38,6 +38,7 @@
 - When you update this file with new DB models, run ```npx prisma validate``` and then ```npx prisma generate``` to regenerate the PrismaClient class that your data access layer uses to interact with the DB.
 - To seed the DB, get the Postgres connection string from AWS RDS and run ```export DB_CONNECTION_STRING='[connection string]'```
 - Run ```npx prisma db seed```
+- When you have finished developing, run ```npx ampx sandbox delete``` to destory the infrastructure in the sandbox
 
 # Summary of Technical Approach
 ## personal-best-api
@@ -59,3 +60,5 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 - hi, my Amplify stack is not deploying my get-exercises-handler due to an error. Specifically, when I try to deploy this handler as-is (using the ExerciseReadRepository ), Amplify cannot find a file called @prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs. Can you help me understand why my other handler that uses similar repositories connected to Prisma deploys fine but this one doesn't?
 - hi, why do I have two prisma schema files now? I think you generated a second one and I don't know which is the correct one to use. I want to stay on Prisma 6
 - hi, I'm struggling to connect my Prisma schema to my Postgres DB hosted on AWS RDS. When I run prisma validate, the Prisma schema gives me: Error validating datasource db: the URL must start with the protocol postgresql:// or postgres://
+
+to-do: revert commit that swapped to v7 and use v7 with a lambda layer 
