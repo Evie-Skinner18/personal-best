@@ -1,11 +1,15 @@
   // to-do seed Exercise and Attempt
 
+import "dotenv/config";
 import { PrismaPg } from '@prisma/adapter-pg';
 import { MeasurementUnit, PrismaClient, TrainingModality } from '../prisma/generated/client'
-import { environment } from '../environment';
 
+const connectionString = process.env.DATABASE_URL ?? process.env.DB_CONNECTION_STRING;
+if (!connectionString) {
+  throw new Error("DATABASE_URL or DB_CONNECTION_STRING environment variable is required");
+}
 
-const adapter = new PrismaPg({ connectionString: environment.DB_CONNECTION_STRING })
+const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

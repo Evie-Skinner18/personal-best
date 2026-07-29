@@ -1,4 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../../prisma/generated/client";
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 
 // Global variable to reuse database connection across Lambda invocations
@@ -63,13 +65,10 @@ async function createDatabaseUrl(): Promise<string> {
 export async function getPrismaClient(): Promise<PrismaClient> {
   if (!prisma) {
     const databaseUrl = await createDatabaseUrl();
+    const adapter = new PrismaPg({ connectionString: databaseUrl });
     
     prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: databaseUrl,
-        },
-      },
+      adapter,
       log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
     });
 
