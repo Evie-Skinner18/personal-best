@@ -1,3 +1,4 @@
+import { inject, injectable } from "tsyringe";
 import { MeasurementUnit, PrismaClient } from '../../prisma/generated/client';
 import { Exercise, TrainingModality } from './Exercise';
 
@@ -8,8 +9,9 @@ export interface IExerciseReadRepository {
   getExerciseByName(name: string): Promise<Exercise | null>;
 }
 
+@injectable()
 export class ExerciseReadRepository implements IExerciseReadRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(@inject("PrismaClient") private readonly prisma:  PrismaClient){}
 
   async getExerciseById(id: string): Promise<Exercise | null> {
     const exercise = await this.prisma.exercise.findUnique({

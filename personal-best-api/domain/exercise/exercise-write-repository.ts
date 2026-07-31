@@ -1,3 +1,4 @@
+import { inject, injectable } from "tsyringe";
 import { PrismaClient } from '../../prisma/generated/client';
 import { Exercise } from './Exercise';
 
@@ -6,8 +7,9 @@ export interface IExerciseWriteRepository {
   deleteExercise(id: string): Promise<void>;
 }
 
+@injectable()
 export class ExerciseWriteRepository implements IExerciseWriteRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+    constructor(@inject("PrismaClient") private readonly prisma:  PrismaClient){}
 
     async updateExercise(id: string, updatedExercise: Exercise): Promise<void> {
         const prismaExercise = updatedExercise.mapToDbModel();

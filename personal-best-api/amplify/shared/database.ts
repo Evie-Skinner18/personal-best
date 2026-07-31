@@ -35,7 +35,13 @@ async function getDatabaseCredentials(): Promise<DatabaseCredentials> {
       throw new Error('No secret string found in response');
     }
 
-    return JSON.parse(response.SecretString) as DatabaseCredentials;
+    const rawCredentials = JSON.parse(response.SecretString) as DatabaseCredentials;
+    const uriEncodedCredentials: DatabaseCredentials = {
+      password: encodeURIComponent(rawCredentials.password),
+      username: encodeURIComponent(rawCredentials.username)
+    }
+
+    return uriEncodedCredentials;
   } catch (error) {
     console.error('Error retrieving database credentials:', error);
     throw new Error('Failed to retrieve database credentials');
@@ -56,7 +62,8 @@ async function createDatabaseUrl(): Promise<string> {
 
   const credentials = await getDatabaseCredentials();
   
-  return `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?schema=public`;
+  const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=verify-full`;
+  return connectionString;
 }
 
 /**

@@ -1,23 +1,30 @@
+import "reflect-metadata";
 import type { Schema } from "../data/resource"
 import { PersonalBestAggregate } from "../../domain/personal-best/PersonalBestAggregate";
 import { Exercise, TrainingModality } from "../../domain/exercise/Exercise";
 import { Attempt } from "../../domain/attempt/Attempt";
 import { IAttemptReadRepository, AttemptReadRepository } from "../../domain/attempt/attempt-read-repository"
-import 'reflect-metadata';
 import { container } from "tsyringe";
 import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../domain/personal-best/personal-best-write-repository";
 import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
 import { PersonalBestDto } from "../../domain/personal-best/personal-best-dto";
-
+import { PrismaClient } from "../../prisma/generated/client";
+import { getPrismaClient } from "../shared/database";
 
 type GetPersonalBestsHandler = Schema["getPersonalBests"]["functionHandler"]
 
 export const handler: GetPersonalBestsHandler = async (event): Promise<PersonalBestDto[]> => {
-  container.register<IAttemptReadRepository>(AttemptReadRepository,  {useClass: AttemptReadRepository});
-  container.register<IPersonalBestWriteRepository>(PersonalBestWriteRepository,  {useClass: PersonalBestWriteRepository});
+  console.log("getting personal bests!");
 
-  const attemptReadRepository = container.resolve(AttemptReadRepository);
-  const pbWriteRepository = container.resolve(PersonalBestWriteRepository);
+  // to-do should the prisma client be newed up or registered?
+  const prisma = await getPrismaClient();
+  container.registerInstance<PrismaClient>("PrismaClient", prisma);
+
+  container.register<IAttemptReadRepository>("IAttemptReadRepository",  {useClass: AttemptReadRepository});
+  container.register<IPersonalBestWriteRepository>("IPersonalBestWriteRepository",  {useClass: PersonalBestWriteRepository});
+
+  const attemptReadRepository: AttemptReadRepository = container.resolve("IAttemptReadRepository");
+  const pbWriteRepository: PersonalBestWriteRepository = container.resolve("IPersonalBestWriteRepository");
 
   const { exerciseName, modality } = event.arguments;
   console.log("exercise is ", JSON.stringify(exerciseName));

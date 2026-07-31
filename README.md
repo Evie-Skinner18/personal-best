@@ -40,7 +40,7 @@
     2. ```npm run migrate``` to migrate the latest version of the DB schema to the DB
     3. (Do 3 and 4 at least once then after it's optional) To seed the DB, get the Postgres connection string from AWS RDS and run ```export DB_CONNECTION_STRING='[connection string]'```
     4. Run ```npm run seed```
-- When you have finished developing, run ```npx ampx sandbox delete``` to destory the infrastructure in the sandbox
+- When you have finished developing, run ```npx ampx sandbox delete``` to destroy the infrastructure in the sandbox
 
 # Summary of Technical Approach
 ## personal-best-api
@@ -63,3 +63,7 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 - hi, why do I have two prisma schema files now? I think you generated a second one and I don't know which is the correct one to use. I want to stay on Prisma 6
 - hi, I'm struggling to connect my Prisma schema to my Postgres DB hosted on AWS RDS. When I run prisma validate, the Prisma schema gives me: Error validating datasource db: the URL must start with the protocol postgresql:// or postgres://
 - hi, please can you migrate personal-best-api to Prisma 7? You may already have some of the files you need e.g a compatible prisma.config.ts is already there
+
+
+to-do: ask Claude do I still need the lambda layer since I no longer get an error when I run Prisma generate
+- Add an exercise to the DB in order to skip seeding it from local

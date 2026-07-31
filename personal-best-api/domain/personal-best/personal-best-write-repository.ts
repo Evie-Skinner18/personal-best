@@ -1,3 +1,4 @@
+import { injectable, inject } from "tsyringe";
 import { PrismaClient } from "../../prisma/generated/client";
 import { PersonalBestAggregate as PrismaPersonalBest } from "../../prisma/generated/client";
 import { PrismaPersonalBestWithoutId } from "./prisma-pb-without-id";
@@ -7,8 +8,9 @@ export interface IPersonalBestWriteRepository {
   updatePersonalBest(personalBest: PrismaPersonalBest): Promise<void>;
 }
 
+@injectable()
 export class PersonalBestWriteRepository implements IPersonalBestWriteRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(@inject("PrismaClient") private readonly prisma:  PrismaClient){}
 
   async addPersonalBest(personalBest: PrismaPersonalBest): Promise<void> {
     await this.prisma.personalBestAggregate.create({
