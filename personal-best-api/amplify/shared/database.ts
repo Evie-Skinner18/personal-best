@@ -12,9 +12,6 @@ interface DatabaseCredentials {
   password: string;
 }
 
-/**
- * Get database credentials from AWS Secrets Manager
- */
 async function getDatabaseCredentials(): Promise<DatabaseCredentials> {
   if (!secretsClient) {
     secretsClient = new SecretsManagerClient({
@@ -48,9 +45,6 @@ async function getDatabaseCredentials(): Promise<DatabaseCredentials> {
   }
 }
 
-/**
- * Create database connection URL from environment variables and credentials
- */
 async function createDatabaseUrl(): Promise<string> {
   const host = process.env.DATABASE_HOST;
   const port = process.env.DATABASE_PORT || '5432';
@@ -70,6 +64,8 @@ async function createDatabaseUrl(): Promise<string> {
  * Get Prisma client instance (singleton pattern for Lambda)
  */
 export async function getPrismaClient(): Promise<PrismaClient> {
+  // it will do this only if there isn't already a PrismaClient instantiated
+  // when you invoke getPrismaClient() from each lambda you are not newing up another one
   if (!prisma) {
     const databaseUrl = await createDatabaseUrl();
     const adapter = new PrismaPg({ connectionString: databaseUrl });
@@ -79,16 +75,12 @@ export async function getPrismaClient(): Promise<PrismaClient> {
       log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
     });
 
-    // Handle connection gracefully
     await prisma.$connect();
   }
 
   return prisma;
 }
 
-/**
- * Close database connection (for cleanup)
- */
 export async function closePrismaConnection(): Promise<void> {
   if (prisma) {
     await prisma.$disconnect();
@@ -96,9 +88,6 @@ export async function closePrismaConnection(): Promise<void> {
   }
 }
 
-/**
- * Test database connection
- */
 export async function testDatabaseConnection(): Promise<boolean> {
   try {
     const client = await getPrismaClient();

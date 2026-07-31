@@ -73,7 +73,7 @@ export class RdsConstruct extends Construct {
     );
 
     // Create database credentials
-    // to-do hide in env vars
+    // to-do hide username in env var
     this.secret = new Secret(this, 'DatabaseCredentials', {
       secretName: `personal-best-${props.environmentName}-db-credentials`,
       generateSecretString: {
