@@ -1,5 +1,6 @@
 import './App.css'
 import LineChart from './data-visualisation/LineChart'
+import { Attempt } from './domain/attempt/Attempt';
 import client from './main'
 
 function App() {
@@ -7,14 +8,27 @@ function App() {
   // to-do consume api response with useState
   // [const message, setMessage] =  useState<string | null>(null);;
 
-  client.queries.getPersonalBests({
-    exerciseName: "Kettlebell swing",
-    modality: "Weights"
-  }).then((response) => {
-    message  = response;
-  }).catch((error) => {
-    console.error("Error fetching personal bests:", error);
+  const todaysAttempt: Attempt = {
+    exerciseId: "exercise-1",
+    weightInKg: 10,
+    numberOfReps: 80,
+    createdAt: '1785754791745'
+  }
+
+  // to-do invoke this on a click
+  client.mutations.createPersonalBest({
+    exerciseId: "exercise-1",
+    todaysAttempt: todaysAttempt
   });
+
+  // client.queries.getPersonalBests({
+  //   exerciseName: "Kettlebell swing",
+  //   modality: "Weights"
+  // }).then((response) => {
+  //   message  = response;
+  // }).catch((error) => {
+  //   console.error("Error fetching personal bests:", error);
+  // });
 
   return (
     <>

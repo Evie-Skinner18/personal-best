@@ -1,10 +1,11 @@
-import { Attempt as PrismaAttempt } from "../../prisma/generated/client"
+import { Attempt as PrismaAttempt } from "../../prisma/generated/client";
+import { Attempt as DtoAttempt } from "../../../personal-best-ui/src/domain/attempt/Attempt";
 
 // to-do should attempt be an aggregate
 // maybe an entity
   // should it calculate the increase/decrease since the last attempt?
 export class Attempt {
-    id!: string;
+    id?: string;
     exerciseId: string;
     numberOfReps?: number;
     timeInMinutes?: string;
@@ -29,6 +30,7 @@ export class Attempt {
         this.createdAt = dateInEpochMilliseconds;
     }
 
+    // to-do should thehse operate on an instance or be static?
     public static mapFromDbModel(prismaAttempt: PrismaAttempt): Attempt {
         return {
             id: prismaAttempt.id,
@@ -38,6 +40,18 @@ export class Attempt {
             weightInKg: prismaAttempt.weightInKg,
             createdAt: prismaAttempt.createdAt.getUTCMilliseconds(),
             updatedAt: prismaAttempt.updatedAt.getUTCMilliseconds()
+        }
+    }
+
+    public static mapFromDto(dto: DtoAttempt): Attempt {
+        return {
+            id: dto.id,
+            exerciseId: dto.exerciseId,
+            numberOfReps: dto.numberOfReps,
+            timeInMinutes: dto.timeInMinutes,
+            weightInKg: dto.weightInKg,
+            createdAt: parseInt(dto.createdAt),
+            updatedAt: dto.updatedAt? parseInt(dto.updatedAt) : undefined
         }
     }
 }

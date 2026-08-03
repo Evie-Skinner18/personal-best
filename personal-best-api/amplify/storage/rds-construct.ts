@@ -108,7 +108,7 @@ export class RdsConstruct extends Construct {
     // Create RDS instance
     this.instance = new DatabaseInstance(this, 'Database', {
       engine: DatabaseInstanceEngine.postgres({
-        version: PostgresEngineVersion.VER_15_12,
+        version: PostgresEngineVersion.VER_15_15,
       }),
       instanceType: props.environmentName === 'prod' ? 
         InstanceType.of(InstanceClass.T3, InstanceSize.SMALL) : 

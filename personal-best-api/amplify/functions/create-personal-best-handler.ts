@@ -50,5 +50,6 @@ export const handler: CreatePersonalBestHandler = async (event): Promise<Persona
 }
 
 //to-do
-// Update/create Lambda functions that use SQL instead of DynamoDB
+// add a mutation to create an attempt
 // Test the entire setup
+// add try/catch

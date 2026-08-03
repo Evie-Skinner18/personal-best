@@ -15,6 +15,7 @@ export class PersonalBestAggregate {
     private attemptId: string;
     private exerciseId: string;
     private exerciseName: string;
+    // to-do does it need to dynamically decide this based on the fields in the Attempt
     private measurementUnit: MeasurementUnit;
     private numberOfReps?: number;
     private timeInMinutes?: string;
@@ -53,7 +54,8 @@ export class PersonalBestAggregate {
         }
         // to-do does this need a strategy pattern depending on MEsurementUnit?
 
-        this.attemptId = currentPbAttempt.id,
+        // yuck
+        this.attemptId = currentPbAttempt.id as string,
         this.exerciseId = exercise.id,
         this.exerciseName = exercise.name,
         this.measurementUnit = exercise.measurementUnit,

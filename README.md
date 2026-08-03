@@ -65,5 +65,9 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 - hi, please can you migrate personal-best-api to Prisma 7? You may already have some of the files you need e.g a compatible prisma.config.ts is already there
 
 
-to-do: ask Claude do I still need the lambda layer since I no longer get an error when I run Prisma generate
+to-do: 
 - Add an exercise to the DB in order to skip seeding it from local
+- create a shared domain layer as a separate directory to both the api and ui. One source of truth for both apps
+- or do you want to maintain the UI's domain models which are basically just POCO versions of the API's real domain models. seems like a code smell :s
+- should the shared domain dir contain DTOs needed for the UI
+- both apps are in a monorepo but they should not be tightly coupled

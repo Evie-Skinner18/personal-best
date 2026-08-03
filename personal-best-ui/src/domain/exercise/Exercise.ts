@@ -1,4 +1,4 @@
-import { MeasurementUnit } from "../common/MeasurementUnit"
+import { Attempt } from "../attempt/Attempt"
 
 export interface Exercise {
     id: string,
@@ -7,14 +7,6 @@ export interface Exercise {
 	currentPersonalBestId: string,
     modality: TrainingModality,
     dateLastTrained: string
-}
-
-export interface Attempt {
-    id: string,
-    date: string,
-    measurementUnit: MeasurementUnit,
-    number: number,
-    weight: number | undefined
 }
 
 export enum TrainingModality {
