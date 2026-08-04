@@ -16,18 +16,18 @@ const schema = a.schema({
     currentPersonalBestId: a.string(),
     modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
     measurementUnit: a.enum(['minutes', 'reps']),
-    dateLastTrained: a.datetime(),
+    dateLastTrained: a.integer(),
   }),
 
   Attempt: a.customType({
     id: a.string(),
     exerciseId: a.string(),
-    date: a.datetime(),
+    date: a.integer(),
     numberOfReps: a.integer(),
     timeInMinutes: a.string(),
     weightInKg: a.integer(),
-    createdAt: a.datetime(),
-    updatedAt: a.datetime(),
+    createdAt: a.integer(),
+    updatedAt: a.integer(),
   }),
 
   PersonalBest: a.customType({
@@ -37,9 +37,10 @@ const schema = a.schema({
     exerciseName: a.string(),
     measurementUnit: a.enum(['minutes', 'reps']),
     numberOfReps: a.integer(),
+    // can't be an int because we want mins and secs
     timeInMinutes: a.string(),
     weightInKg: a.integer(),
-    date: a.datetime(),
+    date: a.integer(),
     amountAboveLastPersonalBest: a.integer(),
   }),
 

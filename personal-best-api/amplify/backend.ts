@@ -6,6 +6,7 @@ import { RdsConstruct } from './storage/rds-construct';
 import { createPersonalBest } from './functions/create-personal-best';
 import { getExercises } from './functions/get-exercises';
 import { FieldLogLevel } from 'aws-cdk-lib/aws-appsync';
+import { IamConstruct } from './auth/iam-construct';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -18,18 +19,21 @@ const backend = defineBackend({
   getExercises
 });
 
-// to-do make IAM role
+const personalBestDeploymentStack = backend.createStack('RdsStack');
 
+const iamRole = new IamConstruct(personalBestDeploymentStack, 'IamRole', {
+  environmentName: backend.auth.resources.userPool.node.tryGetContext('amplify-environment-name') || 'dev'
+});
 
 // add logging to appsync
 const appsyncGraphQlApi = backend.data.resources.cfnResources.cfnGraphqlApi;
 appsyncGraphQlApi.logConfig = {
   fieldLogLevel: FieldLogLevel.INFO,
-  cloudWatchLogsRoleArn: /* an IAM role with logs:CreateLogGroup etc granted to appsync.amazonaws.com */,
+  cloudWatchLogsRoleArn: iamRole.role.roleArn,
 };
 
 // Add RDS database
-const rdsConstruct = new RdsConstruct(backend.createStack("RdsStack"), "Database", {
+const rdsConstruct = new RdsConstruct(personalBestDeploymentStack, 'Database', {
   environmentName: backend.auth.resources.userPool.node.tryGetContext('amplify-environment-name') || 'dev'
 });
 

@@ -17,6 +17,7 @@ type CreatePersonalBestArguments = {
     todaysAttempt: Attempt;
 }
 
+// to-do date fields changed to integer
 export const handler: CreatePersonalBestHandler = async (event): Promise<PersonalBestDto> => {
   // to-do should the prisma client be newed up or registered?
   const prisma = await getPrismaClient();

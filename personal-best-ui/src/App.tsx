@@ -12,7 +12,7 @@ function App() {
     exerciseId: "exercise-1",
     weightInKg: 10,
     numberOfReps: 80,
-    createdAt: '1785754791745'
+    createdAt: 1785754791745
   }
 
   // to-do invoke this on a click
