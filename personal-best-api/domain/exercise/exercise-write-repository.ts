@@ -3,6 +3,7 @@ import { PrismaClient } from '../../prisma/generated/client';
 import { Exercise } from './Exercise';
 
 export interface IExerciseWriteRepository {
+  createExercise(exerciseToCreate: Exercise): Promise<void>;
   updateExercise(id: string, updatedExercise: Exercise): Promise<void>;
   deleteExercise(id: string): Promise<void>;
 }
@@ -10,6 +11,28 @@ export interface IExerciseWriteRepository {
 @injectable()
 export class ExerciseWriteRepository implements IExerciseWriteRepository {
     constructor(@inject("PrismaClient") private readonly prisma:  PrismaClient){}
+    
+    
+    async createExercise(exerciseToCreate: Exercise): Promise<void> {
+        // help what's going weong here?
+        const prismaExercise = exerciseToCreate.mapToDbModel();
+        console.log(`prisma exercise: ${JSON.stringify(prismaExercise)}`);
+        try {
+            await this.prisma.exercise.create({
+                data: {
+                    name: prismaExercise.name,
+                    currentPersonalBestId: prismaExercise.currentPersonalBestId,
+                    modality: prismaExercise.modality,
+                    dateLastTrained: prismaExercise.dateLastTrained,
+                    measurementUnit: prismaExercise.measurementUnit
+                }
+            })
+
+              console.log('exercise created');
+        } catch (error) {
+            throw new Error(`Could not create exercise ${exerciseToCreate.name} in Prisma. ${error}`);
+        }
+    }
 
     async updateExercise(id: string, updatedExercise: Exercise): Promise<void> {
         const prismaExercise = updatedExercise.mapToDbModel();

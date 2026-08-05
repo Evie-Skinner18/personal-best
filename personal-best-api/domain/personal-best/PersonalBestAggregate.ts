@@ -7,6 +7,7 @@ import 'reflect-metadata';
 import { inject, injectable } from "tsyringe";
 import { PrismaPersonalBestWithoutId } from "./prisma-pb-without-id";
 import { PersonalBestAggregate as PrismaPersonalBest } from "../../prisma/generated/client";
+import { PersonalBestAggregateCreateInput } from "../../prisma/generated/models";
 
 
 @injectable()
@@ -85,9 +86,8 @@ export class PersonalBestAggregate {
         };
   }
 
-    private mapToCreateDbModel(): PrismaPersonalBestWithoutId {
+    private mapToCreateDbModel(): PersonalBestAggregateCreateInput {
         return {
-            exerciseId: this.exerciseId,
             exerciseName: this.exerciseName,
             measurementUnit: this.measurementUnit,
             numberOfReps: this.numberOfReps ?? null,
@@ -95,9 +95,21 @@ export class PersonalBestAggregate {
             weightInKg: this.weightInKg,
             date: this.date,
             amountAboveLastPb: this.amountAboveLastPersonalBest,
-            attemptId: this.attemptId,
-            // help
-            exercise: this.exercise.mapToDbModel()
+            exercise: {
+                create: {
+                    name: this.exerciseName,
+                    modality: this.exercise.modality,
+                    measurementUnit: this.exercise.measurementUnit
+                }
+            },
+            attempt: {
+                create: {
+                    exerciseId: this.exerciseId,
+                    numberOfReps: this.numberOfReps ?? null,
+                    timeInMinutes: parseInt(this.timeInMinutes ?? '0') ?? null,
+                    weightInKg: this.weightInKg,
+                }
+            }
         }
     }
 
@@ -118,7 +130,13 @@ export class PersonalBestAggregate {
 
     public async add(): Promise<void> {
         const prismaPersonalBest = this.mapToCreateDbModel();
-        await this.writeRepository.addPersonalBest(prismaPersonalBest);
+        console.log("prismaPersonalBest is ", JSON.stringify(prismaPersonalBest));
+        try {
+            await this.writeRepository.addPersonalBest(prismaPersonalBest);
+        } catch (error) {
+            console.error("Error adding personal best to DB: ", error);
+            throw error;
+        }
     }
 
     public async update(): Promise<void> {

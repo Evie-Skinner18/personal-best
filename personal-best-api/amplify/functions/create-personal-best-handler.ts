@@ -28,7 +28,7 @@ export const handler: CreatePersonalBestHandler = async (event): Promise<Persona
 
   // yuck how do I type the event args better
   const { exerciseId, todaysAttempt } = event.arguments as unknown as CreatePersonalBestArguments;
-  console.log("exerciseId is ", JSON.stringify(exerciseId));
+  console.log(" exerciseId is ", JSON.stringify(exerciseId));
   console.log("todays attempt is ", JSON.stringify(todaysAttempt));
 
   const todaysDate = new Date();
@@ -44,7 +44,7 @@ export const handler: CreatePersonalBestHandler = async (event): Promise<Persona
 );  
 
   const kettlebellSwingPb = new PersonalBestAggregate(kettlebellSwing, todaysAttempt, pbWriteRepository);
-  kettlebellSwingPb.add();
+  await kettlebellSwingPb.add();
 
   return kettlebellSwingPb.toDto();
 }

@@ -1,6 +1,7 @@
 import './App.css'
 import LineChart from './data-visualisation/LineChart'
-import { Attempt } from './domain/attempt/Attempt';
+import { MeasurementUnit } from './domain/common/MeasurementUnit';
+import { Exercise, TrainingModality } from './domain/exercise/Exercise';
 import client from './main'
 
 function App() {
@@ -8,19 +9,38 @@ function App() {
   // to-do consume api response with useState
   // [const message, setMessage] =  useState<string | null>(null);;
 
-  const todaysAttempt: Attempt = {
-    id: 'attempt-3',
-    exerciseId: 'exercise-1',
-    weightInKg: 10,
-    numberOfReps: 80,
-    createdAt: 1785754791745
-  }
+  const burpee: Exercise = {
+    id: "exercise-1",
+    name: "Burpee",
+    modality: TrainingModality.Calisthenics,
+    measurementUnit: MeasurementUnit.Reps,
+    currentPersonalBestId: "attempt-3",
+    dateLastTrained: 1785754791745
+  }; 
+
+    client.mutations.createExercise({
+      exercise: burpee
+    });
+
+  // client.queries.getExercises().then((res) => {
+  //   console.log(res);
+  // }).catch((err) => {
+  //   console.error(err);
+  // });
+
+  // const todaysAttempt: Attempt = {
+  //   id: 'attempt-3',
+  //   exerciseId: 'exercise-1',
+  //   weightInKg: 10,
+  //   numberOfReps: 80,
+  //   createdAt: 1785754791745
+  // }
 
   // to-do invoke this on a click
-  client.mutations.createPersonalBest({
-    exerciseId: 'exercise-1',
-    todaysAttempt: todaysAttempt
-  });
+  // client.mutations.createPersonalBest({
+  //   exerciseId: 'exercise-1',
+  //   todaysAttempt: todaysAttempt
+  // });
 
   // client.queries.getPersonalBests({
   //   exerciseName: "Kettlebell swing",

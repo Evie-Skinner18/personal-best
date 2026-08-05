@@ -7,6 +7,7 @@ import { createPersonalBest } from './functions/create-personal-best';
 import { getExercises } from './functions/get-exercises';
 import { FieldLogLevel } from 'aws-cdk-lib/aws-appsync';
 import { IamConstruct } from './auth/iam-construct';
+import { createExercise } from './functions/create-exercise';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -16,7 +17,8 @@ const backend = defineBackend({
   data,
   getPersonalBests,
   createPersonalBest,
-  getExercises
+  getExercises,
+  createExercise
 });
 
 const personalBestDeploymentStack = backend.createStack('RdsStack');
@@ -53,15 +55,22 @@ backend.getExercises.addEnvironment('DATABASE_PORT', rdsConstruct.instance.insta
 backend.getExercises.addEnvironment('DATABASE_NAME', 'personalbest');
 backend.getExercises.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
 
+backend.createExercise.addEnvironment('DATABASE_HOST', rdsConstruct.instance.instanceEndpoint.hostname);
+backend.createExercise.addEnvironment('DATABASE_PORT', rdsConstruct.instance.instanceEndpoint.port.toString());
+backend.createExercise.addEnvironment('DATABASE_NAME', 'personalbest');
+backend.createExercise.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
+
 
 // Grant the Lambda function access to the database secret
 rdsConstruct.secret.grantRead(backend.getPersonalBests.resources.lambda);
 rdsConstruct.secret.grantRead(backend.createPersonalBest.resources.lambda);
 rdsConstruct.secret.grantRead(backend.getExercises.resources.lambda);
+rdsConstruct.secret.grantRead(backend.createExercise.resources.lambda);
 
 
 // Allow Lambda to connect to RDS (they're in the same VPC)
 backend.getPersonalBests.resources.lambda.node.addDependency(rdsConstruct.instance);
 backend.createPersonalBest.resources.lambda.node.addDependency(rdsConstruct.instance);
 backend.getExercises.resources.lambda.node.addDependency(rdsConstruct.instance);
+backend.createExercise.resources.lambda.node.addDependency(rdsConstruct.instance);
 

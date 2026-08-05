@@ -1,20 +1,23 @@
-import { Attempt } from "../attempt/Attempt"
-
 export interface Exercise {
     id: string,
 	name: string,
-    attempts: Attempt[],
 	currentPersonalBestId: string,
     modality: TrainingModality,
-    dateLastTrained: string
+    measurementUnit: MeasurementUnit,
+    dateLastTrained: number
 }
 
 export enum TrainingModality {
-    Karate,
-    Calisthenics,
-    BJJ,
-    Weights,
-    Movement,
-    Running
+    Karate = 'Karate',
+    Calisthenics = 'Calisthenics',
+    BJJ = 'BJJ',
+    Weights = 'Weights',
+    Movement = 'Movement',
+    Running = 'Running'
+}
+
+export enum MeasurementUnit {
+    Time = "minutes",
+    Reps = "reps"
 }
 

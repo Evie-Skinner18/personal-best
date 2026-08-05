@@ -2,6 +2,9 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { getPersonalBests } from '../functions/get-personal-bests';
 import { getExercises } from '../functions/get-exercises';
 import { createPersonalBest } from '../functions/create-personal-best';
+import { createExercise } from '../functions/create-exercise';
+
+// to-do why is it called 'resource' crap name
 
 /*== Custom RDS-based graphQL API Schema ========================================
 This schema defines the API interface for our PostgreSQL RDS backend.
@@ -37,7 +40,6 @@ const schema = a.schema({
     exerciseName: a.string().required(),
     measurementUnit: a.enum(['minutes', 'reps']),
     numberOfReps: a.integer(),
-    // can't be an int because we want mins and secs
     timeInMinutes: a.time(),
     weightInKg: a.integer().required(),
     date: a.timestamp(),
@@ -82,15 +84,14 @@ const schema = a.schema({
   .authorization(allow => [allow.guest()])
   .handler(a.handler.function(createPersonalBest)),
 
-
-//   createExercise: a
-//     .mutation()
-//     .arguments({
-//       name: a.string(),
-//       modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
-//     })
-//     .returns(a.ref('Exercise'))
-//     .authorization(allow => [allow.guest()]),
+  createExercise: a
+    .mutation()
+    .arguments({
+      exercise: a.ref('Exercise'),
+    })
+    .returns(a.ref('Exercise'))
+    .authorization(allow => [allow.guest()])
+    .handler(a.handler.function(createExercise))
 
 //   createAttempt: a
 //     .mutation()
