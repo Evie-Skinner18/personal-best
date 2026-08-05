@@ -22,6 +22,7 @@ export class PersonalBestAggregate {
     private weightInKg: number;
     private date: Date;
     private amountAboveLastPersonalBest: number;
+    private exercise: Exercise;
 
 
     // to-do does it need at least 2 attempts: the most recent one and the one immediately previous to compare
@@ -65,6 +66,7 @@ export class PersonalBestAggregate {
         this.date = new Date(currentPbAttempt.createdAt),
         // to-do calculate this based on no of reps/time
         this.amountAboveLastPersonalBest = 1
+        this.exercise = exercise;
         
     }
 
@@ -94,6 +96,8 @@ export class PersonalBestAggregate {
             date: this.date,
             amountAboveLastPb: this.amountAboveLastPersonalBest,
             attemptId: this.attemptId,
+            // help
+            exercise: this.exercise.mapToDbModel()
         }
     }
 

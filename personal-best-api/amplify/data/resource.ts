@@ -12,35 +12,35 @@ The actual data storage is handled via SQL queries in Lambda functions.
 const schema = a.schema({
   Exercise: a.customType({
     id: a.string(),
-    name: a.string(),
+    name: a.string().required(),
     currentPersonalBestId: a.string(),
     modality: a.enum(['Karate', 'Calisthenics', 'BJJ', 'Weights', 'Movement', 'Running']),
     measurementUnit: a.enum(['minutes', 'reps']),
-    dateLastTrained: a.integer(),
+    dateLastTrained: a.timestamp(),
   }),
 
   Attempt: a.customType({
     id: a.string(),
     exerciseId: a.string(),
-    date: a.integer(),
+    date: a.datetime(),
     numberOfReps: a.integer(),
     timeInMinutes: a.string(),
-    weightInKg: a.integer(),
-    createdAt: a.integer(),
-    updatedAt: a.integer(),
+    weightInKg: a.integer().required(),
+    createdAt: a.timestamp().required(),
+    updatedAt: a.timestamp(),
   }),
 
   PersonalBest: a.customType({
     id: a.string(),
-    attemptId: a.string(),
+    attemptId: a.string().required(),
     exerciseId: a.string(),
-    exerciseName: a.string(),
+    exerciseName: a.string().required(),
     measurementUnit: a.enum(['minutes', 'reps']),
     numberOfReps: a.integer(),
     // can't be an int because we want mins and secs
-    timeInMinutes: a.string(),
-    weightInKg: a.integer(),
-    date: a.integer(),
+    timeInMinutes: a.time(),
+    weightInKg: a.integer().required(),
+    date: a.timestamp(),
     amountAboveLastPersonalBest: a.integer(),
   }),
 

@@ -9,7 +9,8 @@ function App() {
   // [const message, setMessage] =  useState<string | null>(null);;
 
   const todaysAttempt: Attempt = {
-    exerciseId: "exercise-1",
+    id: 'attempt-3',
+    exerciseId: 'exercise-1',
     weightInKg: 10,
     numberOfReps: 80,
     createdAt: 1785754791745
@@ -17,7 +18,7 @@ function App() {
 
   // to-do invoke this on a click
   client.mutations.createPersonalBest({
-    exerciseId: "exercise-1",
+    exerciseId: 'exercise-1',
     todaysAttempt: todaysAttempt
   });
 
