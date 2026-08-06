@@ -10,9 +10,9 @@
 
 # Back end
 1. `cd personal-best-api`
-2. Login to an AWS account using the CLI. For me I use an alias command `aws-login-midas`
+2. Login to an AWS account using the CLI. For me I use an alias command `aws-login-personalbest`
 3. Select the sandbox option
-4. Deploy the AWS Amplify stack to the sandbox account `npx ampx sandbox --profile midas`
+4. Deploy the AWS Amplify stack to the sandbox account `npx ampx sandbox --profile personalbest`
 5. Once the RDS database has been deployed, go to the AWS console and retrieve the DB connection string
 
 # Tools and Technologies Used
@@ -52,7 +52,7 @@
 - Write repositories modify entities and aggregates in the same DB. E.g ``` personal-best-write-repository.ts ```
 
 # AI Usage
-I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before. I also used it to help me understand how Amplify works, as this technology was also completely new to me. I got a custom agent from the Prisma 7 documentation to give the AI the donkey work of migrating from Prisma 6 to 7 in the best practice way.
+I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before. I also used it to help me understand how Amplify works, as this technology was also completely new to me. I got a custom agent from the Prisma 7 documentation to give the AI the donkey work of migrating from Prisma 6 to 7 in the best practice way. After that, I only used it in ask mode so it could advise me like a senior engineer and I would implement the code changes myself. I found it very useful to scaffold my learning with the Amplify Gen 2 CDK and especially creating network infrastructure.
 
 ## AI Prompts Used
 - Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
@@ -68,6 +68,6 @@ I used GitHub Copilot in agent mode from VSCode to help me change my data layer 
 to-do: 
 - Add an exercise to the DB in order to skip seeding it from local
 - create a shared domain layer as a separate directory to both the api and ui. One source of truth for both apps
-- or do you want to maintain the UI's domain models which are basically just POCO versions of the API's real domain models. seems like a code smell :s
 - should the shared domain dir contain DTOs needed for the UI
 - both apps are in a monorepo but they should not be tightly coupled
+- refactor src/backend.ts as theres a lot going on

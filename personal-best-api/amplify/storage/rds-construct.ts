@@ -65,11 +65,10 @@ export class RdsConstruct extends Construct {
       allowAllOutbound: false,
     });
 
-    // Allow inbound connections from Lambda functions (in same VPC)
     databaseSecurityGroup.addIngressRule(
       databaseSecurityGroup,
       Port.tcp(5432),
-      'Allow PostgreSQL connections from Lambda functions'
+      'Allow PostgreSQL connections from the DB security group'
     );
 
     // Create database credentials

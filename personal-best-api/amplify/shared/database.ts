@@ -56,6 +56,7 @@ async function createDatabaseUrl(): Promise<string> {
 
   const credentials = await getDatabaseCredentials();
   
+  // to-do add TLS certificate https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
   const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=verify-full`;
   return connectionString;
 }
