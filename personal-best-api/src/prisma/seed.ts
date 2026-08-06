@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from '@prisma/adapter-pg';
-import { MeasurementUnit, PrismaClient, TrainingModality } from '../prisma/generated/client'
+import { MeasurementUnit, PrismaClient, TrainingModality } from './generated/client'
 
 const connectionString = process.env.DATABASE_URL ?? process.env.DB_CONNECTION_STRING;
 console.log(connectionString);

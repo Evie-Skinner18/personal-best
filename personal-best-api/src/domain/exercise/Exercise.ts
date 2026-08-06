@@ -1,6 +1,5 @@
 import { MeasurementUnit } from "../common/MeasurementUnit"
 import { Exercise as PrismaExercise, TrainingModality as PrismaTrainingModality } from "../../prisma/generated/client"
-import { ExerciseCreateNestedOneWithoutPersonalBestAggregatesInput } from "../../prisma/generated/models";
 
 export class Exercise {
     id!: string;
@@ -39,18 +38,18 @@ export class Exercise {
         )
   }
 
-  public mapToDbModel(): PrismaExercise {
+  public static mapToDbModel(domainExercise: Exercise): PrismaExercise {
     console.log('mapping to DB model...')
-    const currentPbId: string | null = this.currentPersonalBestId? this.currentPersonalBestId : null;
-    const dateLastTrainedAsDate: Date | null = this.dateLastTrained? new Date(this.dateLastTrained) : null;
+    const currentPbId: string | null = domainExercise.currentPersonalBestId? domainExercise.currentPersonalBestId : null;
+    const dateLastTrainedAsDate: Date | null = domainExercise.dateLastTrained? new Date(domainExercise.dateLastTrained) : null;
 
     return {
-      id: this.id,
-      name: this.name,
+      id: domainExercise.id,
+      name: domainExercise.name,
       currentPersonalBestId: currentPbId,
-      modality: this.modality as PrismaTrainingModality,
+      modality: domainExercise.modality as PrismaTrainingModality,
       dateLastTrained: dateLastTrainedAsDate,
-      measurementUnit: this.measurementUnit
+      measurementUnit: domainExercise.measurementUnit
     }
   }
 }

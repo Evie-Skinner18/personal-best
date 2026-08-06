@@ -1,18 +1,17 @@
 import 'reflect-metadata';
-import { Exercise } from "../../domain/exercise/Exercise";
+import { Exercise } from "../../src/domain/exercise/Exercise";
 import { container } from "tsyringe";
-import { ExerciseWriteRepository, IExerciseWriteRepository } from '../../domain/exercise/exercise-write-repository';
+import { ExerciseWriteRepository, IExerciseWriteRepository } from '../../src/domain/exercise/exercise-write-repository';
 import { getPrismaClient } from '../shared/database';
 import { PrismaClient } from '@prisma/client';
 
-type CreateExerciseArgs = {
+type CreateExerciseArguments = {
     exercise: Exercise
 }
 
+// to-do DB timing out when I ping it
 export const handler = async (event: any): Promise<Exercise> => {
-      const { exercise } = event.arguments;
-      console.log(exercise);
-
+  const { exercise } = event.arguments as unknown as CreateExerciseArguments;
 
   const prisma = await getPrismaClient();
   container.registerInstance<PrismaClient>("PrismaClient", prisma);
@@ -21,7 +20,7 @@ export const handler = async (event: any): Promise<Exercise> => {
   const exerciseWriteRepository: ExerciseWriteRepository = container.resolve('ExerciseWriteRepository');
 
   try {
-    await exerciseWriteRepository.createExercise(exercise)
+    await exerciseWriteRepository.createExercise(exercise);
     return exercise;
   } catch(e) {
     throw new Error(`error creating exercise: ${e}`);

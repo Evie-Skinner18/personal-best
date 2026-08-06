@@ -1,5 +1,5 @@
-import { Exercise, TrainingModality } from '../../domain/exercise/Exercise';
-import { Attempt } from '../../domain/attempt/Attempt';
+import { Exercise, TrainingModality } from '../../src/domain/exercise/Exercise';
+import { Attempt } from '../../src/domain/attempt/Attempt';
 
 export interface DatabaseService {
   // Exercise operations

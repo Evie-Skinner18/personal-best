@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "types": ["mocha", "chai"],
     "paths": {
       "$amplify/*": [
         "./.amplify/generated/*"

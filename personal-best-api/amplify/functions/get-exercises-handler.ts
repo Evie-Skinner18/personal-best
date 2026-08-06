@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { Exercise } from "../../domain/exercise/Exercise";
-import { IExerciseReadRepository, ExerciseReadRepository } from "../../domain/exercise/exercise-read-repository"
+import { Exercise } from "../../src/domain/exercise/Exercise";
+import { IExerciseReadRepository, ExerciseReadRepository } from "../../src/domain/exercise/exercise-read-repository"
 import { container } from "tsyringe";
 import { getPrismaClient } from '../shared/database';
 import { PrismaClient } from '@prisma/client';

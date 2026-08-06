@@ -15,7 +15,9 @@ export class ExerciseWriteRepository implements IExerciseWriteRepository {
     
     async createExercise(exerciseToCreate: Exercise): Promise<void> {
         // help what's going weong here?
-        const prismaExercise = exerciseToCreate.mapToDbModel();
+        console.log(`exercise to create: ${JSON.stringify(exerciseToCreate)}`);
+
+        const prismaExercise = Exercise.mapToDbModel(exerciseToCreate);
         console.log(`prisma exercise: ${JSON.stringify(prismaExercise)}`);
         try {
             await this.prisma.exercise.create({
@@ -35,7 +37,7 @@ export class ExerciseWriteRepository implements IExerciseWriteRepository {
     }
 
     async updateExercise(id: string, updatedExercise: Exercise): Promise<void> {
-        const prismaExercise = updatedExercise.mapToDbModel();
+        const prismaExercise = Exercise.mapToDbModel(updatedExercise);
 
         try {
             await this.prisma.exercise.update({

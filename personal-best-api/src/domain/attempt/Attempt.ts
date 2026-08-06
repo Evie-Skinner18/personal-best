@@ -1,5 +1,5 @@
 import { Attempt as PrismaAttempt } from "../../prisma/generated/client";
-import { Attempt as DtoAttempt } from "../../../personal-best-ui/src/domain/attempt/Attempt";
+import { Attempt as DtoAttempt } from "../../../../personal-best-ui/src/domain/attempt/Attempt";
 
 // to-do should attempt be an aggregate
 // maybe an entity
@@ -50,8 +50,8 @@ export class Attempt {
             numberOfReps: dto.numberOfReps,
             timeInMinutes: dto.timeInMinutes,
             weightInKg: dto.weightInKg,
-            createdAt: parseInt(dto.createdAt),
-            updatedAt: dto.updatedAt? parseInt(dto.updatedAt) : undefined
+            createdAt: dto.createdAt,
+            updatedAt: dto.updatedAt? dto.updatedAt : undefined
         }
     }
 }

@@ -1,14 +1,14 @@
 import "reflect-metadata";
 import type { Schema } from "../data/resource"
-import { PersonalBestAggregate } from "../../domain/personal-best/PersonalBestAggregate";
-import { Exercise, TrainingModality } from "../../domain/exercise/Exercise";
-import { Attempt } from "../../domain/attempt/Attempt";
-import { IAttemptReadRepository, AttemptReadRepository } from "../../domain/attempt/attempt-read-repository"
+import { PersonalBestAggregate } from "../../src/domain/personal-best/PersonalBestAggregate";
+import { Exercise, TrainingModality } from "../../src/domain/exercise/Exercise";
+import { Attempt } from "../../src/domain/attempt/Attempt";
+import { IAttemptReadRepository, AttemptReadRepository } from "../../src/domain/attempt/attempt-read-repository"
 import { container } from "tsyringe";
-import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../domain/personal-best/personal-best-write-repository";
-import { MeasurementUnit } from "../../domain/common/MeasurementUnit";
-import { PersonalBestDto } from "../../domain/personal-best/personal-best-dto";
-import { PrismaClient } from "../../prisma/generated/client";
+import { IPersonalBestWriteRepository, PersonalBestWriteRepository } from "../../src/domain/personal-best/personal-best-write-repository";
+import { MeasurementUnit } from "../../src/domain/common/MeasurementUnit";
+import { PersonalBestDto } from "../../src/domain/personal-best/personal-best-dto";
+import { PrismaClient } from "../../src/prisma/generated/client";
 import { getPrismaClient } from "../shared/database";
 
 type GetPersonalBestsHandler = Schema["getPersonalBests"]["functionHandler"]
