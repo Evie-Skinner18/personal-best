@@ -1,0 +1,20 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "sourceMap": true
+    },
+    "include": [
+        "src//*.ts",
+        "amplify//.ts",
+        "environment.ts",
+        "prisma.config.ts"
+    ],
+    "exclude": [
+        "**/.test.ts",
+        "node_modules",
+        "dist"
+    ]
+}

@@ -11,6 +11,7 @@ import { createPersonalBest } from './functions/create-personal-best';
 import { getExercises } from './functions/get-exercises';
 import { createExercise } from './functions/create-exercise';
 import { ManagedPolicy } from 'aws-cdk-lib/aws-iam';
+import { LambdaLayerConstruct } from './functions/lambda-layer-construct';
 
 
 
@@ -26,7 +27,22 @@ const backend = defineBackend({
   createExercise
 });
 
+
 const personalBestDeploymentStack = backend.createStack('RdsStack');
+
+const rdsCertificateLambdaLayer = new LambdaLayerConstruct(personalBestDeploymentStack, 'LambdaLayer', {
+  name: 'rds-certificate-layer',
+  description: 'Lambda layer to make the TLS certificate available to all lambdas connecting to the DB'
+});
+
+// yuck want to set the layer in defineFunction() ideally
+// attach layer to each lambda so it can contact the DB
+const getPersonalBestsCfnFunction = backend.getPersonalBests.resources.lambda.node.defaultChild as CfnFunction;
+const createExerciseLambda = backend.createExercise.resources.lambda;
+const createExerciseCfnFunction = createExerciseLambda.node.defaultChild as CfnFunction;
+
+getPersonalBestsCfnFunction.layers = [ rdsCertificateLambdaLayer.layer.layerVersionArn ];
+createExerciseCfnFunction.layers = [ rdsCertificateLambdaLayer.layer.layerVersionArn ];
 
 const appSyncIamRole = new IamConstruct(personalBestDeploymentStack, 'IamRole', {
   environmentName: backend.auth.resources.userPool.node.tryGetContext('amplify-environment-name') || 'dev'
@@ -55,8 +71,6 @@ const vpc = Vpc.fromVpcAttributes(backend.createExercise.resources.lambda.stack,
 });
 
 // Apply VPC configuration via CDK escape hatch
-const createExerciseLambda = backend.createExercise.resources.lambda;
-const createExerciseCfnFunction = createExerciseLambda.node.defaultChild as CfnFunction;
 const dbSecurityGroup = rdsConstruct.instance.connections.securityGroups[0];
 
 const lambdaSecurityGroup = new SecurityGroup(personalBestDeploymentStack, 'LambdaSecurityGroup', {
@@ -66,6 +80,7 @@ const lambdaSecurityGroup = new SecurityGroup(personalBestDeploymentStack, 'Lamb
     });
 
 
+    // to-do attach all other lambdas to VPC
 createExerciseCfnFunction.vpcConfig = {
   subnetIds: vpc.privateSubnets.map(s => s.subnetId),
   securityGroupIds: [lambdaSecurityGroup.securityGroupId],
@@ -88,21 +103,32 @@ backend.getPersonalBests.addEnvironment('DATABASE_HOST', rdsConstruct.instance.i
 backend.getPersonalBests.addEnvironment('DATABASE_PORT', rdsConstruct.instance.instanceEndpoint.port.toString());
 backend.getPersonalBests.addEnvironment('DATABASE_NAME', 'personalbest');
 backend.getPersonalBests.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
+backend.getPersonalBests.addEnvironment('DATABASE_SSL_MODE', 'require');
+backend.getPersonalBests.addEnvironment('DATABASE_SSL_CA_PATH', '/opt/eu-west-1-bundle.pem');
 
 backend.createPersonalBest.addEnvironment('DATABASE_HOST', rdsConstruct.instance.instanceEndpoint.hostname);
 backend.createPersonalBest.addEnvironment('DATABASE_PORT', rdsConstruct.instance.instanceEndpoint.port.toString());
 backend.createPersonalBest.addEnvironment('DATABASE_NAME', 'personalbest');
 backend.createPersonalBest.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
+backend.createPersonalBest.addEnvironment('DATABASE_SSL_MODE', 'require');
+backend.createPersonalBest.addEnvironment('DATABASE_SSL_CA_PATH', '/opt/eu-west-1-bundle.pem');
+
 
 backend.getExercises.addEnvironment('DATABASE_HOST', rdsConstruct.instance.instanceEndpoint.hostname);
 backend.getExercises.addEnvironment('DATABASE_PORT', rdsConstruct.instance.instanceEndpoint.port.toString());
 backend.getExercises.addEnvironment('DATABASE_NAME', 'personalbest');
 backend.getExercises.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
+backend.getExercises.addEnvironment('DATABASE_SSL_MODE', 'require');
+backend.getExercises.addEnvironment('DATABASE_SSL_CA_PATH', '/opt/eu-west-1-bundle.pem');
+
 
 backend.createExercise.addEnvironment('DATABASE_HOST', rdsConstruct.instance.instanceEndpoint.hostname);
 backend.createExercise.addEnvironment('DATABASE_PORT', rdsConstruct.instance.instanceEndpoint.port.toString());
 backend.createExercise.addEnvironment('DATABASE_NAME', 'personalbest');
 backend.createExercise.addEnvironment('DATABASE_SECRET_ARN', rdsConstruct.secret.secretArn);
+backend.createExercise.addEnvironment('DATABASE_SSL_MODE', 'require');
+backend.createExercise.addEnvironment('DATABASE_SSL_CA_PATH', '/opt/eu-west-1-bundle.pem');
+
 
 
 // Grant the Lambda function access to the database secret

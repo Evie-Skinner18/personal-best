@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../src/prisma/generated/client";
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { readFileSync } from "node:fs";
 
 // Global variable to reuse database connection across Lambda invocations
 let prisma: PrismaClient | null = null;
@@ -57,7 +58,7 @@ async function createDatabaseUrl(): Promise<string> {
   const credentials = await getDatabaseCredentials();
   
   // to-do add TLS certificate https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
-  const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=verify-full`;
+  const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=require`;
   return connectionString;
 }
 
@@ -69,7 +70,16 @@ export async function getPrismaClient(): Promise<PrismaClient> {
   // when you invoke getPrismaClient() from each lambda you are not newing up another one
   if (!prisma) {
     const databaseUrl = await createDatabaseUrl();
-    const adapter = new PrismaPg({ connectionString: databaseUrl });
+    // to-do not working so cert is a must
+    const certFilePath = process.env.DATABASE_SSL_CA_PATH? process.env.DATABASE_SSL_CA_PATH : '/opt/eu-west-1-bundle.pem';
+    const adapter = new PrismaPg({ 
+      connectionString: databaseUrl, 
+      ssl: { 
+        ca: readFileSync(certFilePath, { encoding: 'utf-8' }), 
+        requestCert: true, 
+        rejectUnauthorized: true 
+      } 
+    });
     
     prisma = new PrismaClient({
       adapter,
