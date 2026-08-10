@@ -58,7 +58,7 @@ async function createDatabaseUrl(): Promise<string> {
   const credentials = await getDatabaseCredentials();
   
   // to-do add TLS certificate https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
-  const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=require`;
+  const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=no-verify`;
   return connectionString;
 }
 
@@ -70,7 +70,6 @@ export async function getPrismaClient(): Promise<PrismaClient> {
   // when you invoke getPrismaClient() from each lambda you are not newing up another one
   if (!prisma) {
     const databaseUrl = await createDatabaseUrl();
-    // to-do not working so cert is a must
     const certFilePath = process.env.DATABASE_SSL_CA_PATH? process.env.DATABASE_SSL_CA_PATH : '/opt/eu-west-1-bundle.pem';
     const adapter = new PrismaPg({ 
       connectionString: databaseUrl, 
