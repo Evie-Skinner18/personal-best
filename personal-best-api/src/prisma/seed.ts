@@ -1,18 +1,18 @@
 import "dotenv/config";
 import { PrismaPg } from '@prisma/adapter-pg';
 import { MeasurementUnit, PrismaClient, TrainingModality } from './generated/client'
+import { closePrismaConnection } from "../../amplify/shared/database";
 
-const connectionString = process.env.DATABASE_URL ?? process.env.DB_CONNECTION_STRING;
-console.log(connectionString);
-if (!connectionString) {
-  throw new Error("DATABASE_URL or DB_CONNECTION_STRING environment variable is required");
-}
-
+// to-do connect using the shared lambda DB code
+// remove
+const connectionString = process.env.LOCAL_DB_CONNECTION_STRING;
 const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  const kbSwing = await prisma.exercise.upsert({
+
+try {
+    console.log('seeding Exercise table....');
+    const kbSwing = await prisma.exercise.upsert({
     where: { id: '1' },
     update: {},
     create: {
@@ -29,15 +29,9 @@ async function main() {
       },
     },
   });
-  
-  console.log({ kbSwing });
+  await closePrismaConnection();
 }
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+   catch(e) {
+    await closePrismaConnection();
+    throw new Error(`error seeding DB: ${e}`);
+  }  

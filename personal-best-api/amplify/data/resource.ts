@@ -3,6 +3,7 @@ import { getPersonalBests } from '../functions/get-personal-bests';
 import { getExercises } from '../functions/get-exercises';
 import { createPersonalBest } from '../functions/create-personal-best';
 import { createExercise } from '../functions/create-exercise';
+import { seedDb } from '../functions/seed-db';
 
 // to-do why is it called 'resource' crap name
 
@@ -91,7 +92,13 @@ const schema = a.schema({
     })
     .returns(a.ref('Exercise'))
     .authorization(allow => [allow.guest()])
-    .handler(a.handler.function(createExercise))
+    .handler(a.handler.function(createExercise)),
+
+  seedDb: a
+    .mutation()
+    .returns(a.string())
+    .authorization(allow => [allow.guest()])
+    .handler(a.handler.function(seedDb)),
 
 //   createAttempt: a
 //     .mutation()

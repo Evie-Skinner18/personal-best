@@ -33,40 +33,55 @@
 - NPM
 
 # Local API Development
-- You must be in the API directory to run Prisma commands otherwise it will prompt you to install Prisma 7, which doesn't work with Amplify
+- You must be in the API directory to run Prisma commands
+- In .env, fill the ```LOCAL_DB_CONNECTION_STRING``` environent variable with the connection string pointing to the personalbest DB running on your local instance of PostgreSQL. This is used as a shadow DB to enable Prisma to create a .sql file from the migrate command. Then the migration lambda will be the one that applies the .sql file to the RDS DB in AWS (you can't migrate to the RDS DB directly from local)
 - To use the Prisma ORM, run ```cd personal-best-api``` from your Terminal and run commands like ```npx prisma validate```. This validates your ```schema.prisma``` file
 - When you update this file with new DB models, run ```npx prisma validate``` and then the next commands in the following order:
     1.  ```npm run generate``` to regenerate the PrismaClient class that your data access layer uses to interact with the DB.
-    2. ```npm run migrate``` to migrate the latest version of the DB schema to the DB
-    3. (Do 3 and 4 at least once then after it's optional) To seed the DB, get the Postgres connection string from AWS RDS and run ```export DB_CONNECTION_STRING='[connection string]'```
-    4. Run ```npm run seed```
+    2. ```npm run migrate``` to create a SQL file defining the latest version of the DB schema
+    4. ```npm run migrate:apply``` to run that SQL against the DB (apply the migration)
+    5. (Do 3 and 4 at least once then after it's optional) To seed the DB, get the Postgres connection string from AWS RDS. Get the username and password from Secrets Manager (personal-best-dev-db-credentials). Use these to build the full connection string in .env and run ```export DB_CONNECTION_STRING='[connection string]'```
+    6. Run ```npm run seed```
 - When you have finished developing, run ```npx ampx sandbox delete``` to destroy the infrastructure in the sandbox
+
+# Important
+- Prisma needs a percentage encoded value for the DB password
+- Once the sandbox is deployed, retrieve the encoded password and copy it securely to your clipboard by running:
+```cd personal-best-api```
+```aws secretsmanager list-secrets```
+```aws secretsmanager get-secret-value \
+  --secret-id <ARN of the database secret> \
+  --query SecretString --output text \
+  | jq -r .password \
+  | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>process.stdout.write(encodeURIComponent(d.trim())))" \
+  | pbcopy
+  ```
+  This command:
+  1. invokes the AWS CLI to obtain the DB password from secrets manager using the secret's ARN (it is an object with username and password properties)
+  2. checks for a secret string returned by that invocation and tells the Terminal to output that as text
+  3. specifies that we're after the `password` property of the resulting stringified object
+  4. uses Node to run an inline piece of JavaScript in quotation marks. This code percentage-encodes the password value 
+  5. copies the encoded value to the user's clipboard
 
 # Summary of Technical Approach
 ## personal-best-api
 - GraphQL schema definition in TypeScript in ``` resource.ts ```
+- All the infrastructure is provisioned in TypeScript using Amplify's Gen2 CDK
 - AWS Amplify generates the GraphQL schema and the AppSync resolvers on every deployment
 - Lambda functions executed by the AppSync resolvers coordinate business logic. E.g ``` get-personal-bests-handler.ts ```
 - Domain models enact the business logic using a Domain Driven Design approach. E.g ``` PersonalBestAggregate.ts ```
 - Read repositories retrieve entities and aggregates from a PostgreSQL RDS database. E.g ``` exercise-read-repository.ts ```
 - Write repositories modify entities and aggregates in the same DB. E.g ``` personal-best-write-repository.ts ```
+- The React UI is tightly coupled to the API but I'm not sure how to fix this yet
 
 # AI Usage
-I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before. I also used it to help me understand how Amplify works, as this technology was also completely new to me. I got a custom agent from the Prisma 7 documentation to give the AI the donkey work of migrating from Prisma 6 to 7 in the best practice way. After that, I only used it in ask mode so it could advise me like a senior engineer and I would implement the code changes myself. I found it very useful to scaffold my learning with the Amplify Gen 2 CDK and especially creating network infrastructure.
-
-## AI Prompts Used
-- Hi, please can you change my code so that it makes tables in AWS RDS rather than DynamoDB? The way my models interact is relational so I want to use a relational database
-- Can you tell me why I have been able to create a graphQL API using AWS amplify without a graphQL schema in the personal-best-api directory?
-- hi, please can you make me a repository in this file that connects to the Exercise table of my SQL database defined in the Prisma code? It should be able to only execute read operations
-- hi, please can you go through the merge conflicts in my personal-best-api/package.json file and accept the <<<HEAD current change for each one?
-- hi, my Amplify stack is not deploying my get-exercises-handler due to an error. Specifically, when I try to deploy this handler as-is (using the ExerciseReadRepository ), Amplify cannot find a file called @prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs. Can you help me understand why my other handler that uses similar repositories connected to Prisma deploys fine but this one doesn't?
-- hi, why do I have two prisma schema files now? I think you generated a second one and I don't know which is the correct one to use. I want to stay on Prisma 6
-- hi, I'm struggling to connect my Prisma schema to my Postgres DB hosted on AWS RDS. When I run prisma validate, the Prisma schema gives me: Error validating datasource db: the URL must start with the protocol postgresql:// or postgres://
-- hi, please can you migrate personal-best-api to Prisma 7? You may already have some of the files you need e.g a compatible prisma.config.ts is already there
+I used GitHub Copilot in agent mode from VSCode to help me change my data layer to use RDS instead of the original DynamoDB. This is because the data is relational and I had never worked with relational data in TypeScript before. I also used it to help me understand how Amplify works, as this technology was also completely new to me. I got a custom agent from the Prisma 7 documentation to give the AI the donkey work of migrating from Prisma 6 to 7 in the best practice way. After that, I only used it in ask mode so it could advise me like a senior engineer and I would implement the code changes myself. I found it very useful to scaffold my learning with the Amplify Gen 2 CDK and especially creating network infrastructure. Finally, I used it to create the command above for retrieving the encoded DB password, as I wasn't sure how to obtain this encoded value in a secure way. The subsequent explanation/gist of the command is my own.
 
 
-to-do: 
-- Add an exercise to the DB in order to skip seeding it from local
+
+# to-do: 
+- make a lambda that will apply the migrations. Lambda layer including the Prisma binaries it will need to run prisma migrate deploy
+- consider connecting to the RDS DB using the certificate in the existing lambda layer. Currently not needed
 - create a shared domain layer as a separate directory to both the api and ui. One source of truth for both apps
 - should the shared domain dir contain DTOs needed for the UI
 - both apps are in a monorepo but they should not be tightly coupled

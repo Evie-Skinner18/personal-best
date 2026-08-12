@@ -13,7 +13,7 @@ interface DatabaseCredentials {
   password: string;
 }
 
-async function getDatabaseCredentials(): Promise<DatabaseCredentials> {
+async function  getDatabaseCredentials(): Promise<DatabaseCredentials> {
   if (!secretsClient) {
     secretsClient = new SecretsManagerClient({
       region: process.env.AWS_REGION || 'eu-west-1'
@@ -57,7 +57,6 @@ async function createDatabaseUrl(): Promise<string> {
 
   const credentials = await getDatabaseCredentials();
   
-  // to-do add TLS certificate https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
   const connectionString = `postgresql://${credentials.username}:${credentials.password}@${host}:${port}/${database}?sslmode=no-verify`;
   return connectionString;
 }
@@ -90,6 +89,8 @@ export async function getPrismaClient(): Promise<PrismaClient> {
 
   return prisma;
 }
+
+// export async function seed()
 
 export async function closePrismaConnection(): Promise<void> {
   if (prisma) {

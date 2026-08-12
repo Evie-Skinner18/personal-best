@@ -2,12 +2,14 @@ import "dotenv/config";
 import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: "src/prisma/schema.prisma",
   migrations: {
-    path: "prisma/migrations",
-    seed: "tsx prisma/seed.ts",
+    path: "src/prisma/migrations",
+    seed: "tsx src/prisma/seed.ts",
   },
   datasource: {
-    url: env("DB_CONNECTION_STRING"),
+    // help migrate works with conn string hard coded but not loaded from an env. is it to do with % encoding? the local
+    // conn string worked without % encoding
+    url: process.env.DB_CONNECTION_STRING
   }
 });

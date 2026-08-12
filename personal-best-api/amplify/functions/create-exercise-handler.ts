@@ -9,7 +9,6 @@ type CreateExerciseArguments = {
     exercise: Exercise
 }
 
-// to-do DB timing out when I ping it
 export const handler = async (event: any): Promise<Exercise> => {
   const { exercise } = event.arguments as unknown as CreateExerciseArguments;
 

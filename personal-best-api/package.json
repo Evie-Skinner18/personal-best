@@ -7,6 +7,7 @@
     "test": "mocha",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
+    "migrate:apply": "prisma migrate deploy",
     "seed": "npx tsx src/prisma/seed.ts",
     "build": "tsc -p tsconfig.build.json",
     "prisma:generate": "prisma generate",

@@ -1,7 +1,8 @@
 import './App.css'
 import LineChart from './data-visualisation/LineChart'
-import { MeasurementUnit } from './domain/common/MeasurementUnit';
-import { Exercise, TrainingModality } from './domain/exercise/Exercise';
+import { Exercise, MeasurementUnit, TrainingModality } from './domain/exercise/Exercise';
+// import { MeasurementUnit } from './domain/common/MeasurementUnit';
+// import { Exercise, TrainingModality } from './domain/exercise/Exercise';
 import client from './main'
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
     currentPersonalBestId: "attempt-3",
     dateLastTrained: 1785754791745
   }; 
+
+  // client.mutations.seedDb();
 
     client.mutations.createExercise({
       exercise: burpee
