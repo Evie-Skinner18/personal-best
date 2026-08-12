@@ -27,9 +27,10 @@
 - AWS Amplify (Gen 2 code-first GraphQL schema)
 - AWS RDS
 - Postgres
-- Prisma ORM 6
+- Prisma ORM 7
 - TypeScript
-- Jest
+- Mocha
+- Chai
 - NPM
 
 # Local API Development
@@ -62,6 +63,11 @@
   3. specifies that we're after the `password` property of the resulting stringified object
   4. uses Node to run an inline piece of JavaScript in quotation marks. This code percentage-encodes the password value 
   5. copies the encoded value to the user's clipboard
+
+# Testing
+- Run the API unit tests using Mocha like so:
+`cd personal-best-api`
+`npm run test`
 
 # Summary of Technical Approach
 ## personal-best-api
