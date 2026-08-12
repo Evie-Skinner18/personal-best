@@ -17,6 +17,7 @@ sme-quote-collection.json
 **/.terraform/*
 
 # Editor directories and files
+.vscode
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea
@@ -37,3 +38,4 @@ cucumber_report.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/personal-best-api/dist/
